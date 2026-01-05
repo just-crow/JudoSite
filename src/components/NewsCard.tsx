@@ -21,19 +21,19 @@ export default function NewsCard({
 }: NewsCardProps) {
     if (size === 'small') {
         return (
-            <Link href={href} className="group flex gap-4 p-4 card hover:bg-[var(--surface-hover)]">
+            <Link href={href} className="group flex gap-4 p-4 rounded-xl hover:bg-[var(--background-alt)] transition-colors">
                 {/* Thumbnail */}
-                <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)]">
-                    <div className="w-full h-full flex items-center justify-center opacity-30">
-                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-[var(--primary)] to-[var(--primary-light)]">
+                    <div className="w-full h-full flex items-center justify-center opacity-40">
+                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
                         </svg>
                     </div>
                 </div>
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                    <span className="text-[10px] font-bold text-[var(--secondary)] uppercase tracking-wider">{category}</span>
-                    <h4 className="text-sm font-semibold text-white group-hover:text-[var(--secondary)] transition-colors line-clamp-2 mt-1">
+                    <span className="text-[10px] font-bold text-[var(--primary)] uppercase tracking-wider">{category}</span>
+                    <h4 className="text-sm font-semibold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors line-clamp-2 mt-1">
                         {title}
                     </h4>
                     <span className="text-xs text-[var(--text-muted)] mt-2 block">{date}</span>
@@ -45,8 +45,8 @@ export default function NewsCard({
     return (
         <Link href={href} className="group card overflow-hidden">
             {/* Image */}
-            <div className={`relative overflow-hidden ${size === 'large' ? 'h-56' : 'h-48'} bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)]`}>
-                <div className="absolute inset-0 flex items-center justify-center opacity-20">
+            <div className={`relative overflow-hidden ${size === 'large' ? 'h-56' : 'h-48'} bg-gradient-to-br from-[var(--primary)] to-[var(--primary-light)]`}>
+                <div className="absolute inset-0 flex items-center justify-center opacity-30">
                     <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
                     </svg>
@@ -56,11 +56,11 @@ export default function NewsCard({
                     <span className="tag">{category}</span>
                 </div>
                 {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
             {/* Content */}
-            <div className="p-5">
-                <h3 className={`font-bold text-white group-hover:text-[var(--secondary)] transition-colors mb-3 line-clamp-2 ${size === 'large' ? 'text-xl' : 'text-base'}`}>
+            <div className="p-6">
+                <h3 className={`font-bold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors mb-3 line-clamp-2 ${size === 'large' ? 'text-xl' : 'text-base'}`}>
                     {title}
                 </h3>
                 {excerpt && (
@@ -70,7 +70,7 @@ export default function NewsCard({
                 )}
                 <div className="flex items-center justify-between">
                     <span className="text-xs text-[var(--text-muted)]">{date}</span>
-                    <span className="text-[var(--secondary)] text-sm font-medium group-hover:underline">
+                    <span className="text-[var(--primary)] text-sm font-semibold group-hover:underline">
                         Pročitaj više →
                     </span>
                 </div>
