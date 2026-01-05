@@ -28,92 +28,96 @@ const footerLinks = {
 
 export default function Footer() {
     return (
-        <footer className="bg-[var(--primary)] text-white">
-            {/* Main footer */}
-            <div className="container py-20">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-16">
-                    {/* Brand */}
-                    <div className="lg:col-span-2">
-                        <Link href="/" className="flex items-center gap-4 mb-8">
-                            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-                                <span className="text-3xl font-bold text-[var(--primary)]">柔</span>
+        <footer className="bg-[var(--primary)] text-white relative overflow-hidden">
+            {/* Decorative background elements */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[var(--accent)]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+            <div className="container relative z-10">
+                {/* Main Footer Content */}
+                <div className="py-16 lg:py-20 grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16">
+                    {/* Brand Section */}
+                    <div className="lg:col-span-1 space-y-6">
+                        <Link href="/" className="inline-block group">
+                            <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-colors border border-white/10">
+                                <span className="text-4xl font-bold">柔</span>
                             </div>
-                            <div>
-                                <h2 className="text-2xl font-bold text-white">Judo Klub</h2>
-                                <p className="text-sm text-white/70">Sarajevo</p>
-                            </div>
+                            <h2 className="text-2xl font-bold mb-1">Judo Klub</h2>
+                            <p className="text-white/60 text-sm">Sarajevo</p>
                         </Link>
-                        <p className="text-white/80 mb-8 max-w-sm leading-relaxed text-base">
-                            Od 1952. godine razvijamo judo kulturu i sportsku izvrsnost. Pridružite nam se na putu ka majstorstvu.
+                        <p className="text-white/70 leading-relaxed text-sm">
+                            Više od 70 godina tradicije, uspjeha i stvaranja šampiona. Pridruži se našoj porodici.
                         </p>
-                        <div className="flex gap-4">
-                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-[var(--primary)] transition-all">
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z" /></svg>
-                            </a>
-                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-[var(--primary)] transition-all">
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58,0,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s0,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.64.07-4.85.07s-3.58,0-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.64-.07-4.85s0-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33,0,7.05.07c-4.27.2-6.78,2.71-7,7C0,8.33,0,8.74,0,12s0,3.67.07,4.95c.2,4.27,2.71,6.78,7,7C8.33,24,8.74,24,12,24s3.67,0,4.95-.07c4.27-.2,6.78-2.71,7-7C24,15.67,24,15.26,24,12s0-3.67-.07-4.95c-.2-4.27-2.71-6.78-7-7C15.67,0,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z" /></svg>
-                            </a>
-                            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-[var(--primary)] transition-all">
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.54,3.5,12,3.5,12,3.5s-7.54,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.67,31.67,0,0,0,0,12a31.67,31.67,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.84.55,9.38.55,9.38.55s7.54,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.67,31.67,0,0,0,24,12,31.67,31.67,0,0,0,23.5,6.19ZM9.5,15.57V8.43L16,12Z" /></svg>
-                            </a>
+                        <div className="flex gap-3 pt-2">
+                            {['facebook', 'instagram', 'youtube'].map((social) => (
+                                <a key={social} href="#" className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-[var(--accent)] hover:text-white transition-all transform hover:-translate-y-1">
+                                    <span className="sr-only">{social}</span>
+                                    <div className="w-5 h-5 bg-current rounded-full opacity-50" />
+                                </a>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Links */}
+                    {/* Links Column 1 */}
                     <div>
-                        <h3 className="text-white font-bold mb-6 text-lg">Novosti</h3>
-                        <ul className="space-y-4">
-                            {footerLinks.novosti.map((link) => (
-                                <li key={link.href}>
-                                    <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
-                                        {link.label}
+                        <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                            <span className="w-1 h-6 bg-[var(--accent)] rounded-full"></span>
+                            Klub
+                        </h3>
+                        <ul className="space-y-3">
+                            {['O nama', 'Historijat', 'Uprava', 'Treneri', 'Kontakt'].map((item) => (
+                                <li key={item}>
+                                    <Link href="#" className="text-white/70 hover:text-white hover:translate-x-1 transition-all inline-block text-sm">
+                                        {item}
                                     </Link>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
+                    {/* Links Column 2 */}
                     <div>
-                        <h3 className="text-white font-bold mb-6 text-lg">Klub</h3>
-                        <ul className="space-y-4">
-                            {footerLinks.klub.map((link) => (
-                                <li key={link.href}>
-                                    <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
-                                        {link.label}
+                        <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                            <span className="w-1 h-6 bg-[var(--accent)] rounded-full"></span>
+                            Programi
+                        </h3>
+                        <ul className="space-y-3">
+                            {['Judo škola', 'Takmičarski pogon', 'Rekreativni judo', 'Samodbrana', 'Termini treninga'].map((item) => (
+                                <li key={item}>
+                                    <Link href="#" className="text-white/70 hover:text-white hover:translate-x-1 transition-all inline-block text-sm">
+                                        {item}
                                     </Link>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
+                    {/* Newsletter / Contact */}
                     <div>
-                        <h3 className="text-white font-bold mb-6 text-lg">Podrška</h3>
-                        <ul className="space-y-4">
-                            {footerLinks.podrska.map((link) => (
-                                <li key={link.href}>
-                                    <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                        <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                            <span className="w-1 h-6 bg-[var(--accent)] rounded-full"></span>
+                            Kontakt
+                        </h3>
+                        <div className="space-y-4">
+                            <div className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                                <p className="text-xs text-[var(--accent)] font-bold uppercase tracking-wider mb-1">Adresa</p>
+                                <p className="text-sm font-medium">Mula Mustafe Bašeskije 12</p>
+                                <p className="text-sm text-white/60">71000 Sarajevo, BiH</p>
+                            </div>
+                            <div className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                                <p className="text-xs text-[var(--accent)] font-bold uppercase tracking-wider mb-1">Email</p>
+                                <p className="text-sm font-medium">info@judoklub.ba</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Bottom bar */}
-            <div className="border-t border-white/20">
-                <div className="container py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p className="text-white/60 text-sm">
-                        © 2026 Judo Klub Sarajevo. Sva prava zadržana.
-                    </p>
-                    <div className="flex gap-8 text-sm">
-                        <Link href="/privatnost" className="text-white/60 hover:text-white">
-                            Politika privatnosti
-                        </Link>
-                        <Link href="/uslovi" className="text-white/60 hover:text-white">
-                            Uslovi korištenja
-                        </Link>
+                {/* Bottom Bar */}
+                <div className="py-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/50">
+                    <p>© 2026 Judo Klub Sarajevo. Sva prava pridržana.</p>
+                    <div className="flex gap-6">
+                        <Link href="#" className="hover:text-white transition-colors">Privatnost</Link>
+                        <Link href="#" className="hover:text-white transition-colors">Uslovi korištenja</Link>
                     </div>
                 </div>
             </div>
