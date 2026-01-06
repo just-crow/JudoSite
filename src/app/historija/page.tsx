@@ -1,15 +1,15 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Historija | Judo Klub Sarajevo",
-    description: "Historija Judo Kluba Sarajevo od osnivanja 1952. godine do danas.",
+    title: "Historija | Judo Klub Željezničar",
+    description: "Historija Judo Kluba Željezničar od osnivanja 1952. godine do danas.",
 };
 
 const timeline = [
     {
         year: "1952",
         title: "Osnivanje kluba",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Judo Klub Sarajevo osnovan je kao jedan od prvih judo klubova u Jugoslaviji.",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Judo Klub Željezničar osnovan je kao jedan od prvih judo klubova u Jugoslaviji.",
     },
     {
         year: "1965",

@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Kontakt | Judo Klub Sarajevo",
-    description: "Kontaktirajte Judo Klub Sarajevo. Adresa, telefon, email i kontakt forma.",
+    title: "Kontakt | Judo Klub Željezničar",
+    description: "Kontaktirajte Judo Klub Željezničar. Adresa, telefon, email i kontakt forma.",
 };
 
 export default function KontaktPage() {
@@ -93,7 +93,7 @@ export default function KontaktPage() {
                                 Adresa
                             </h3>
                             <p className="text-[var(--text-secondary)]">
-                                Judo Klub Sarajevo<br />
+                                Judo Klub Željezničar<br />
                                 Ulica Zmaja od Bosne 123<br />
                                 71000 Sarajevo<br />
                                 Bosna i Hercegovina
@@ -123,8 +123,8 @@ export default function KontaktPage() {
                                 Email
                             </h3>
                             <p className="text-[var(--text-secondary)]">
-                                info@judoklub-sarajevo.ba<br />
-                                akademija@judoklub-sarajevo.ba
+                                info@judoklub-zeljeznicar.ba<br />
+                                akademija@judoklub-zeljeznicar.ba
                             </p>
                         </div>
 

@@ -1,6 +1,17 @@
 import Link from 'next/link';
+import { getCompetitions } from '@/actions/competitions';
+import { getSponsors } from '@/actions/sponsors';
 
-export default function Sidebar() {
+export default async function Sidebar() {
+    const competitions = await getCompetitions();
+    const sponsors = await getSponsors();
+
+    // Sort competitions by date and take next 3
+    const upcomingCompetitions = competitions
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        .filter(c => new Date(c.date) >= new Date()) // Only future events? Or just all? Let's show all sorted for now or filtered.
+        .slice(0, 3);
+
     return (
         <div className="space-y-10">
             {/* Events Widget */}
@@ -17,26 +28,28 @@ export default function Sidebar() {
                 </div>
 
                 <div className="space-y-4">
-                    {[
-                        { date: "15. JANUAR 2026.", title: "Državno prvenstvo BiH", location: "Sarajevo" },
-                        { date: "28. JANUAR 2026.", title: "Međunarodni turnir \"Sarajevo Open\"", location: "Sarajevo" },
-                        { date: "10. FEBRUAR 2026.", title: "Kup BiH - Juniori", location: "Banja Luka" },
-                    ].map((event, index) => (
-                        <div key={index} className="group p-5 rounded-2xl bg-[var(--background-alt)] hover:bg-white border border-transparent hover:border-[var(--border)] transition-all duration-300 hover:shadow-md cursor-pointer">
-                            <div className="text-[10px] font-bold text-[var(--primary)] mb-2 tracking-wider">{event.date}</div>
-                            <div className="font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--primary)] transition-colors">{event.title}</div>
-                            <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
-                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                {event.location}
+                    {upcomingCompetitions.length > 0 ? (
+                        upcomingCompetitions.map((event) => (
+                            <div key={event.id} className="group p-5 rounded-2xl bg-[var(--background-alt)] hover:bg-white border border-transparent hover:border-[var(--border)] transition-all duration-300 hover:shadow-md cursor-pointer">
+                                <div className="text-[10px] font-bold text-[var(--primary)] mb-2 tracking-wider">
+                                    {new Date(event.date).toLocaleDateString('bs-BA', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase()}
+                                </div>
+                                <div className="font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--primary)] transition-colors line-clamp-2">{event.title}</div>
+                                <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    {event.location}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <p className="text-[var(--text-secondary)] text-sm">Nema najavljenih takmičenja.</p>
+                    )}
                 </div>
 
-                <Link href="/takmicenja" className="mt-8 flex items-center justify-center gap-2 text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors group">
+                <Link href="/kalendar" className="mt-8 flex items-center justify-center gap-2 text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--primary)] transition-colors group">
                     VIDI SVA TAKMIČENJA
                     <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -44,7 +57,7 @@ export default function Sidebar() {
                 </Link>
             </div>
 
-            {/* Sponsors with better grid */}
+            {/* Sponsors Widget */}
             <div className="card p-8 lg:p-10 rounded-3xl bg-white/50">
                 <div className="flex items-center gap-4 mb-8">
                     <div className="w-12 h-12 rounded-xl bg-[var(--accent)] flex items-center justify-center text-white shadow-lg">
@@ -58,11 +71,26 @@ export default function Sidebar() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="aspect-square rounded-2xl bg-[var(--background-alt)] flex items-center justify-center group hover:shadow-md transition-all">
-                            <span className="text-xs font-bold text-[var(--text-muted)] group-hover:text-[var(--primary)] transition-colors">Sponzor {i}</span>
-                        </div>
-                    ))}
+                    {sponsors.length > 0 ? (
+                        sponsors.map((sponsor) => (
+                            <a
+                                key={sponsor.id}
+                                href={sponsor.website}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="aspect-square rounded-2xl bg-[var(--background-alt)] flex items-center justify-center group hover:shadow-md transition-all p-4"
+                                title={sponsor.name}
+                            >
+                                {sponsor.logo ? (
+                                    <img src={sponsor.logo} alt={sponsor.name} className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all" />
+                                ) : (
+                                    <span className="text-xs font-bold text-[var(--text-muted)] group-hover:text-[var(--primary)] transition-colors text-center">{sponsor.name}</span>
+                                )}
+                            </a>
+                        ))
+                    ) : (
+                        <p className="col-span-2 text-[var(--text-secondary)] text-sm text-center">Postanite naš sponzor.</p>
+                    )}
                 </div>
             </div>
         </div>

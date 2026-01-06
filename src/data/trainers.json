@@ -1,0 +1,22 @@
+[
+    {
+        "id": "1",
+        "name": "Slaviša Stojanović",
+        "role": "Glavni trener",
+        "rank": "5. Dan",
+        "image": "https://randomuser.me/api/portraits/men/32.jpg",
+        "bio": "20+ godina iskustva u radu sa vrhunskim sportistima. Selektor reprezentacije.",
+        "email": "slavisa@judoklub.ba",
+        "phone": "+387 61 123 456"
+    },
+    {
+        "id": "2",
+        "name": "Amela Kovačević",
+        "role": "Trenerka kadeta",
+        "rank": "3. Dan",
+        "image": "https://randomuser.me/api/portraits/women/44.jpg",
+        "bio": "Specijalista za rad sa mlađim uzrasnim kategorijama.",
+        "email": "amela@judoklub.ba",
+        "phone": "+387 62 987 654"
+    }
+]

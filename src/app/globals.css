@@ -12,6 +12,9 @@
   /* Backgrounds */
   --background: #ffffff;
   --background-alt: #f8fafc;
+  --surface: #ffffff;
+  --surface-hover: var(--primary);
+  --surface-light: #f1f5f9;
 
   /* Text */
   --text-primary: #0f172a;

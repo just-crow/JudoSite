@@ -1,0 +1,37 @@
+[
+    {
+        "id": "1",
+        "name": "Marko Petrović",
+        "category": "-73kg",
+        "ageGroup": "Seniori",
+        "rank": "1. Dan",
+        "image": "https://randomuser.me/api/portraits/men/1.jpg",
+        "description": "Državni prvak 2025, Bronza EP 2024",
+        "achievements": [
+            "Državni prvak 2025",
+            "Bronza EP 2024"
+        ]
+    },
+    {
+        "id": "2",
+        "name": "Selma Mujić",
+        "category": "-57kg",
+        "ageGroup": "Seniori",
+        "rank": "1. Dan",
+        "image": "https://randomuser.me/api/portraits/women/2.jpg",
+        "description": "Državna prvakinja 2025",
+        "achievements": [
+            "Državna prvakinja 2025"
+        ]
+    },
+    {
+        "id": "3",
+        "name": "Dijete Jedan",
+        "category": "-30kg",
+        "ageGroup": "U-13",
+        "rank": "4. Kyu",
+        "image": "",
+        "description": "Perspektivni mladi takmičar",
+        "achievements": []
+    }
+]

@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "O klubu | Judo Klub Sarajevo",
-    description: "Saznajte više o Judo Klubu Sarajevo - historija, rukovodstvo, dojo i kontakt informacije.",
+    title: "O klubu | Judo Klub Željezničar",
+    description: "Saznajte više o Judo Klubu Željezničar - historija, rukovodstvo, dojo i kontakt informacije.",
 };
 
 const leadership = [
@@ -34,7 +34,7 @@ export default function KlubPage() {
                     <div className="max-w-3xl">
                         <span className="tag mb-4">O nama</span>
                         <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                            Judo Klub Sarajevo
+                            Judo Klub Željezničar
                         </h1>
                         <p className="text-xl text-[var(--text-secondary)]">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Od 1952. godine razvijamo judo kulturu i sportsku izvrsnost u Bosni i Hercegovini.

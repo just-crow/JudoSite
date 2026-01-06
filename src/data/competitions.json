@@ -1,0 +1,18 @@
+[
+    {
+        "id": "1",
+        "title": "Državno prvenstvo BiH",
+        "date": "2026-01-15",
+        "location": "Sarajevo",
+        "description": "Najvažnije takmičenje u sezoni za sve uzraste.",
+        "registrationLink": "#"
+    },
+    {
+        "id": "2",
+        "title": "Sarajevo Open",
+        "date": "2026-01-28",
+        "location": "Sarajevo",
+        "description": "Međunarodni turnir sa učesnicima iz 15 zemalja.",
+        "registrationLink": "#"
+    }
+]

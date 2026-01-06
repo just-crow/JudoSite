@@ -25,13 +25,21 @@ export default function NewsCard({
         return (
             <Link href={href} className="group flex items-start gap-4 p-5 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300 border border-transparent hover:border-[var(--border-light)] transform hover:-translate-y-1">
                 <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 relative shadow-sm group-hover:shadow-md transition-shadow">
-                    <div className="absolute inset-0 image-placeholder">
-                        <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                            <svg className="w-8 h-8 text-[var(--text-muted)]" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg>
+                    {image ? (
+                        <img
+                            src={image}
+                            alt={title}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <div className="absolute inset-0 image-placeholder">
+                            <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                                <svg className="w-8 h-8 text-[var(--text-muted)]" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                                </svg>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
                 <div className="flex-1 min-w-0 py-1">
                     <div className="flex items-center gap-2 mb-2">
@@ -53,11 +61,19 @@ export default function NewsCard({
         <Link href={href} className="group card overflow-hidden hover-glow-ring block h-full mb-10">
             {/* Image section */}
             <div className={`relative overflow-hidden ${size === 'large' ? 'h-72 lg:h-80' : 'h-56 lg:h-64'} image-placeholder`}>
-                <div className="absolute inset-0 flex items-center justify-center opacity-15">
-                    <svg className={`w-24 h-24 text-[var(--text-muted)] transition-transform duration-700 group-hover:scale-110`} fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
-                    </svg>
-                </div>
+                {image ? (
+                    <img
+                        src={image}
+                        alt={title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                ) : (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-15">
+                        <svg className={`w-24 h-24 text-[var(--text-muted)] transition-transform duration-700 group-hover:scale-110`} fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
+                        </svg>
+                    </div>
+                )}
                 <div className="absolute top-5 left-5">
                     <span className="tag shadow-lg backdrop-blur-md bg-[var(--primary)]/90">{category}</span>
                 </div>

@@ -10,12 +10,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Judo Klub Sarajevo | Zvanična internet stranica",
-  description: "Zvanična internet stranica Judo Kluba Sarajevo. Od 1952. godine razvijamo judo kulturu i sportsku izvrsnost.",
-  keywords: "judo, sarajevo, klub, borilačke vještine, sport, djeca, takmičenja",
+  title: "Judo Klub Željezničar | Zvanična internet stranica",
+  description: "Zvanična internet stranica Judo Kluba Željezničar. Od 1952. godine razvijamo judo kulturu i sportsku izvrsnost.",
+  keywords: "judo, sarajevo, klub, željezničar, borilačke vještine, sport, djeca, takmičenja",
   openGraph: {
-    title: "Judo Klub Sarajevo",
-    description: "Zvanična internet stranica Judo Kluba Sarajevo",
+    title: "Judo Klub Željezničar",
+    description: "Zvanična internet stranica Judo Kluba Željezničar",
     type: "website",
     locale: "bs_BA",
   },

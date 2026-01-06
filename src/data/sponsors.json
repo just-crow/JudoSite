@@ -1,0 +1,14 @@
+[
+    {
+        "id": "1",
+        "name": "BH Telecom",
+        "logo": "/uploads/sponsors/bhtelecom.png",
+        "website": "https://bhtelecom.ba"
+    },
+    {
+        "id": "2",
+        "name": "Example Sponsor",
+        "logo": "",
+        "website": "#"
+    }
+]

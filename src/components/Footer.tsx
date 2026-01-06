@@ -26,7 +26,10 @@ const footerLinks = {
     ],
 };
 
-export default function Footer() {
+import { getSponsors } from '@/actions/sponsors';
+
+export default async function Footer() {
+    const sponsors = await getSponsors();
     return (
         <footer className="bg-[var(--primary)] text-white relative overflow-hidden">
             {/* Decorative background elements */}
@@ -43,7 +46,7 @@ export default function Footer() {
                                 <span className="text-4xl font-bold">柔</span>
                             </div>
                             <h2 className="text-2xl font-bold mb-1">Judo Klub</h2>
-                            <p className="text-white/60 text-sm">Sarajevo</p>
+                            <p className="text-white/60 text-sm">Željezničar</p>
                         </Link>
                         <p className="text-white/70 leading-relaxed text-sm">
                             Više od 70 godina tradicije, uspjeha i stvaranja šampiona. Pridruži se našoj porodici.
@@ -112,9 +115,34 @@ export default function Footer() {
                     </div>
                 </div>
 
+                {/* Sponsors Section */}
+                {sponsors.length > 0 && (
+                    <div className="py-12 border-t border-white/10">
+                        <p className="text-center text-sm font-bold tracking-widest text-white/40 uppercase mb-8">Ponosni Prijatelji i Sponzori</p>
+                        <div className="flex flex-wrap justify-center gap-8 items-center min-h-[60px]">
+                            {sponsors.map((sponsor) => (
+                                <a
+                                    key={sponsor.id}
+                                    href={sponsor.website}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="group opacity-40 hover:opacity-100 transition-opacity duration-300"
+                                    title={sponsor.name}
+                                >
+                                    {sponsor.logo ? (
+                                        <img src={sponsor.logo} alt={sponsor.name} className="h-10 w-auto object-contain filter grayscale group-hover:grayscale-0 transition-all" />
+                                    ) : (
+                                        <span className="text-sm font-bold text-white group-hover:text-[var(--accent)] transition-colors">{sponsor.name}</span>
+                                    )}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Bottom Bar */}
                 <div className="py-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/50">
-                    <p>© 2026 Judo Klub Sarajevo. Sva prava pridržana.</p>
+                    <p>© 2026 Judo Klub Željezničar. Sva prava pridržana.</p>
                     <div className="flex gap-6">
                         <Link href="#" className="hover:text-white transition-colors">Privatnost</Link>
                         <Link href="#" className="hover:text-white transition-colors">Uslovi korištenja</Link>

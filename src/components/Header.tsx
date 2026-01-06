@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getSession } from '@/actions/auth';
 
 const menuItems = [
   {
@@ -9,32 +10,7 @@ const menuItems = [
     href: '/novosti',
     submenu: [
       { label: 'Najave', href: '/novosti/najave' },
-      { label: 'Izvještaji sa takmičenja', href: '/novosti/izvjestaji' },
-      { label: 'Akademija', href: '/novosti/akademija' },
-      { label: 'Intervjui', href: '/novosti/intervjui' },
       { label: 'Foto galerije', href: '/novosti/galerije' },
-    ],
-  },
-  {
-    label: 'Takmičari',
-    href: '/takmicari',
-    submenu: [
-      { label: 'Seniori', href: '/takmicari/seniori' },
-      { label: 'Juniori', href: '/takmicari/juniori' },
-      { label: 'Kadeti', href: '/takmicari/kadeti' },
-      { label: 'Treneri i Sensei', href: '/takmicari/treneri' },
-    ],
-  },
-  {
-    label: 'Akademija',
-    href: '/akademija',
-    submenu: [
-      { label: 'O akademiji', href: '/akademija' },
-      { label: 'Zašto judo?', href: '/akademija/zasto-judo' },
-      { label: 'Poznati polaznici', href: '/akademija/polaznici' },
-      { label: 'Osoblje', href: '/akademija/osoblje' },
-      { label: 'Upis', href: '/akademija/upis' },
-      { label: 'Kontakt', href: '/akademija/kontakt' },
     ],
   },
   {
@@ -49,6 +25,14 @@ const menuItems = [
     ],
   },
   {
+    label: 'Takmičari',
+    href: '/takmicari',
+  },
+  {
+    label: 'Treneri',
+    href: '/treneri',
+  },
+  {
     label: 'Historija',
     href: '/historija',
     submenu: [
@@ -56,20 +40,17 @@ const menuItems = [
       { label: 'Uspjesi i medalje', href: '/historija/uspjesi' },
     ],
   },
-  {
-    label: 'Članstvo',
-    href: '/clanstvo',
-    submenu: [
-      { label: 'Postani član', href: '/clanstvo' },
-      { label: 'Obnova članarine', href: '/clanstvo/obnova' },
-      { label: 'Provjeri status', href: '/clanstvo/status' },
-    ],
-  },
 ];
+
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  // Hide header on admin pages to prevent overlap
+  if (pathname?.startsWith('/admin')) return null;
 
   return (
     <header className="sticky top-0 z-50">
@@ -78,24 +59,7 @@ export default function Header() {
         <div className="container">
           <div className="flex items-center justify-between py-2">
             <div className="flex items-center gap-10">
-              <Link
-                href="/shop"
-                className="flex items-center gap-4 px-6 py-3 rounded-full hover:bg-white/10 transition-all text-sm font-bold tracking-wide opacity-90 hover:opacity-100"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-                Shop
-              </Link>
-              <Link
-                href="/kontakt"
-                className="flex items-center gap-4 px-6 py-3 rounded-full hover:bg-white/10 transition-all text-sm font-bold tracking-wide opacity-90 hover:opacity-100"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Kontakt
-              </Link>
+              {/* Shop removed */}
             </div>
             <div className="flex items-center gap-6">
               {[
@@ -123,7 +87,7 @@ export default function Header() {
       {/* Main header */}
       <nav className="glass transition-all duration-300">
         <div className="container">
-          <div className="flex items-center justify-between py-4">
+          <div className="flex items-center justify-between py-5">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-4 group">
               <div className="w-14 h-14 bg-gradient-to-br from-[var(--primary)] to-[var(--primary-light)] rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-105">
@@ -133,12 +97,12 @@ export default function Header() {
                 <h1 className="text-2xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors tracking-tight">
                   Judo Klub
                 </h1>
-                <p className="text-sm text-[var(--text-muted)] font-medium">Sarajevo</p>
+                <p className="text-sm text-[var(--text-muted)] font-medium">Željezničar</p>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-4">
               {menuItems.map((item) => (
                 <div
                   key={item.label}
@@ -148,7 +112,7 @@ export default function Header() {
                 >
                   <Link
                     href={item.href}
-                    className="px-5 py-3 text-[var(--text-primary)] hover:text-[var(--primary)] transition-all font-bold text-sm flex items-center gap-2 rounded-xl hover:bg-[var(--background-alt)]"
+                    className="px-5 py-3 text-[var(--text-primary)] hover:text-[var(--primary)] transition-all font-bold text-[15px] flex items-center gap-2 rounded-xl hover:bg-[var(--background-alt)]"
                   >
                     {item.label}
                     {item.submenu && (
@@ -178,13 +142,20 @@ export default function Header() {
                   )}
                 </div>
               ))}
+
+              {/* Admin Badge (Client-side check would go here, but for now lets add a dedicated component or just Link if we assume session check handles access control) */}
+              {/* Actually, the user specifically asked for a badge if logged in. */}
+              {/* Since this is a client component, we'll need to fetch the session status. */}
             </div>
 
-            {/* CTA Button */}
-            <div className="hidden xl:block">
-              <Link href="/clanstvo" className="btn-primary py-3 px-8 text-sm min-w-min">
-                Postani član
-              </Link>
+            <div className="flex items-center gap-4">
+              {/* Admin Link Placeholder - we will inject the logic via useEffect in next step or use a separate component */}
+              <AdminLink />
+
+              {/* CTA Button */}
+              <div className="hidden xl:block">
+                {/* CTA removed */}
+              </div>
             </div>
 
             {/* Mobile menu button */}
@@ -219,6 +190,9 @@ export default function Header() {
                     {item.label}
                   </Link>
                 ))}
+                <div className="px-8 pt-4">
+                  <AdminLink mobile />
+                </div>
               </div>
               <div className="mt-12 pt-10 border-t border-[var(--border)]">
                 <Link href="/clanstvo" className="btn-primary w-full justify-center text-lg py-6" onClick={() => setMobileMenuOpen(false)}>
@@ -230,5 +204,31 @@ export default function Header() {
         )}
       </nav>
     </header>
+  );
+}
+
+function AdminLink({ mobile }: { mobile?: boolean }) {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    getSession().then(session => {
+      if (session?.user) setIsAdmin(true);
+    });
+  }, []);
+
+  if (!isAdmin) return null;
+
+  if (mobile) {
+    return (
+      <Link href="/admin/dashboard" className="block text-red-600 font-bold text-xl hover:bg-red-50 rounded-lg transition-colors p-2">
+        Admin Panel
+      </Link>
+    )
+  }
+
+  return (
+    <Link href="/admin/dashboard" className="px-3 py-1 bg-red-100 text-red-600 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-red-200 transition-colors shadow-sm">
+      Admin
+    </Link>
   );
 }
