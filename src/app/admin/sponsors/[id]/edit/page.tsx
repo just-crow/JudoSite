@@ -2,7 +2,8 @@ import { getSponsor, updateSponsor } from "@/actions/sponsors";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function EditSponsorPage({ params }: { params: { id: string } }) {
+export default async function EditSponsorPage(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const sponsor = await getSponsor(params.id);
 
     if (!sponsor) {

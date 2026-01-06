@@ -48,15 +48,17 @@ export default async function AdminTrainersPage() {
                                         <div>{item.email}</div>
                                         <div>{item.phone}</div>
                                     </td>
-                                    <td className="p-6 text-right flex items-center justify-end gap-2">
-                                        <Link href={`/admin/trainers/${item.id}/edit`} className="text-[var(--primary)] hover:text-[var(--primary-dark)] font-medium transition-colors p-2 hover:bg-blue-50 rounded-lg">
-                                            Uredi
-                                        </Link>
-                                        <form action={deleteTrainer.bind(null, item.id)}>
-                                            <button className="text-red-500 hover:text-red-700 font-medium transition-colors p-2 hover:bg-red-50 rounded-lg">
-                                                Obriši
-                                            </button>
-                                        </form>
+                                    <td className="p-6 text-right">
+                                        <div className="flex items-center justify-end gap-2">
+                                            <Link href={`/admin/trainers/${item.id}/edit`} className="text-[var(--primary)] hover:text-[var(--primary-dark)] font-medium transition-colors p-2 hover:bg-blue-50 rounded-lg">
+                                                Uredi
+                                            </Link>
+                                            <form action={deleteTrainer.bind(null, item.id)}>
+                                                <button className="text-red-500 hover:text-red-700 font-medium transition-colors p-2 hover:bg-red-50 rounded-lg">
+                                                    Obriši
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

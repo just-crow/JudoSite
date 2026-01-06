@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
     title: "Kontakt | Judo Klub Željezničar",
@@ -10,79 +11,22 @@ export default function KontaktPage() {
         <div className="section">
             <div className="container">
                 {/* Header */}
-                <div className="text-center mb-12">
+                <div className="text-center mb-12 animate-fade-in-up">
                     <h1 className="text-4xl font-bold text-white mb-4">Kontaktirajte nas</h1>
                     <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rado ćemo odgovoriti na sva vaša pitanja.
+                        IMATE PITANJA? Rado ćemo odgovoriti na sve vaše upite vezane za treninge, takmičenja ili upis.
                     </p>
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-12">
                     {/* Contact Form */}
-                    <div className="card p-8">
+                    <div className="card p-8 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                         <h2 className="text-2xl font-bold text-white mb-6">Pošaljite poruku</h2>
-                        <form className="space-y-6">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-[var(--text-secondary)] text-sm mb-2">Ime</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Vaše ime"
-                                        className="w-full px-4 py-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-white placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--secondary)] transition-colors"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[var(--text-secondary)] text-sm mb-2">Prezime</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Vaše prezime"
-                                        className="w-full px-4 py-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-white placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--secondary)] transition-colors"
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <label className="block text-[var(--text-secondary)] text-sm mb-2">Email</label>
-                                <input
-                                    type="email"
-                                    placeholder="vas@email.com"
-                                    className="w-full px-4 py-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-white placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--secondary)] transition-colors"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[var(--text-secondary)] text-sm mb-2">Telefon</label>
-                                <input
-                                    type="tel"
-                                    placeholder="+387 6X XXX XXX"
-                                    className="w-full px-4 py-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-white placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--secondary)] transition-colors"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[var(--text-secondary)] text-sm mb-2">Tema</label>
-                                <select className="w-full px-4 py-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-white focus:outline-none focus:border-[var(--secondary)] transition-colors">
-                                    <option value="">Odaberite temu</option>
-                                    <option value="membership">Članstvo</option>
-                                    <option value="academy">Akademija</option>
-                                    <option value="training">Treninzi</option>
-                                    <option value="competition">Takmičenja</option>
-                                    <option value="other">Ostalo</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-[var(--text-secondary)] text-sm mb-2">Poruka</label>
-                                <textarea
-                                    rows={5}
-                                    placeholder="Vaša poruka..."
-                                    className="w-full px-4 py-3 rounded-lg bg-[var(--background)] border border-[var(--border)] text-white placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--secondary)] transition-colors resize-none"
-                                ></textarea>
-                            </div>
-                            <button type="submit" className="btn-primary w-full">
-                                Pošalji poruku
-                            </button>
-                        </form>
+                        <ContactForm />
                     </div>
 
                     {/* Contact Info */}
-                    <div className="space-y-6">
+                    <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
                         {/* Address Card */}
                         <div className="card p-6">
                             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-3">
@@ -140,14 +84,6 @@ export default function KontaktPage() {
                                 <p>Ponedjeljak - Petak: 09:00 - 21:00</p>
                                 <p>Subota: 09:00 - 15:00</p>
                                 <p>Nedjelja: Zatvoreno</p>
-                            </div>
-                        </div>
-
-                        {/* Map Placeholder */}
-                        <div className="card p-6">
-                            <h3 className="text-lg font-bold text-white mb-4">Lokacija</h3>
-                            <div className="h-48 rounded-lg bg-[var(--background)] border border-[var(--border)] flex items-center justify-center">
-                                <span className="text-[var(--text-muted)]">[Placeholder za mapu]</span>
                             </div>
                         </div>
                     </div>

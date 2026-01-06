@@ -2,7 +2,8 @@ import { getCompetitor, updateCompetitor } from "@/actions/competitors";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function EditCompetitorPage({ params }: { params: { id: string } }) {
+export default async function EditCompetitorPage(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const competitor = await getCompetitor(params.id);
 
     if (!competitor) {

@@ -2,7 +2,8 @@ import { getTrainer, updateTrainer } from "@/actions/trainers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function EditTrainerPage({ params }: { params: { id: string } }) {
+export default async function EditTrainerPage(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const trainer = await getTrainer(params.id);
 
     if (!trainer) {

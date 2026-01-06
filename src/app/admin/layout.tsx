@@ -38,6 +38,12 @@ export default async function AdminLayout({
                                     <Link href="/admin/competitions" className="text-sm font-medium hover:text-[var(--primary)] transition-colors">
                                         Takmičenja
                                     </Link>
+                                    <Link href="/admin/sponsors" className="text-sm font-medium hover:text-[var(--primary)] transition-colors">
+                                        Sponzori
+                                    </Link>
+                                    <Link href="/admin/messages" className="text-sm font-medium hover:text-[var(--primary)] transition-colors">
+                                        Poruke
+                                    </Link>
                                     <Link href="/" target="_blank" className="text-sm font-medium hover:text-[var(--primary)] transition-colors flex items-center gap-2">
                                         Posjeti stranicu
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

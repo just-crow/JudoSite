@@ -42,15 +42,20 @@ export default async function AdminSponsorsPage() {
                                     <td className="p-6 text-[var(--text-secondary)]">
                                         <a href={item.website} target="_blank" className="text-[var(--primary)] hover:underline">{item.website}</a>
                                     </td>
-                                    <td className="p-6 text-right flex items-center justify-end gap-2">
-                                        <Link href={`/admin/sponsors/${item.id}/edit`} className="text-[var(--primary)] hover:text-[var(--primary-dark)] font-medium transition-colors p-2 hover:bg-blue-50 rounded-lg">
-                                            Uredi
-                                        </Link>
-                                        <form action={deleteSponsor.bind(null, item.id)}>
-                                            <button className="text-red-500 hover:text-red-700 font-medium transition-colors p-2 hover:bg-red-50 rounded-lg">
-                                                Obriši
-                                            </button>
-                                        </form>
+                                    <td className="p-6 text-right">
+                                        <div className="flex items-center justify-end gap-2 isolate relative z-10">
+                                            <Link
+                                                href={`/admin/sponsors/${item.id}/edit`}
+                                                className="inline-flex items-center px-3 py-2 text-sm font-medium text-[var(--primary)] bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                                            >
+                                                Uredi
+                                            </Link>
+                                            <form action={deleteSponsor.bind(null, item.id)}>
+                                                <button className="inline-flex items-center px-3 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+                                                    Obriši
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
