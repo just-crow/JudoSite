@@ -23,30 +23,6 @@ export default async function NovostiPage() {
     return (
         <div className="section">
             <div className="container">
-                {/* Page Header */}
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-white mb-4">Novosti</h1>
-                    <p className="text-[var(--text-secondary)] max-w-2xl">
-                        Pratite sve aktuelnosti, rezultate sa takmičenja i dešavanja iz našeg kluba.
-                    </p>
-                </div>
-
-                {/* Category Filter */}
-                <div className="flex flex-wrap gap-2 mb-8">
-                    {categories.map((cat) => (
-                        <Link
-                            key={cat.label}
-                            href={cat.href}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${cat.active
-                                ? "bg-[var(--secondary)] text-[var(--primary-dark)]"
-                                : "bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-white"
-                                }`}
-                        >
-                            {cat.label}
-                        </Link>
-                    ))}
-                </div>
-
                 <div className="grid lg:grid-cols-3 gap-8">
                     {/* News Grid */}
                     <div className="lg:col-span-2">
@@ -58,7 +34,7 @@ export default async function NovostiPage() {
                                     excerpt={article.excerpt}
                                     category={article.tags?.[0] || "Novosti"}
                                     date={article.date}
-                                    href={`/novosti/clanak/${article.id}`}
+                                    href={`/novosti/${article.id}`}
                                     image={article.image}
                                 />
                             ))}

@@ -20,7 +20,7 @@ export default function Hero({ featuredNews }: HeroProps) {
 
     // Helper to get consistent values
     const getMainImage = (n: any) => n.image || defaultFeatured.image;
-    const getMainLink = (n: any) => n.id === 'default-1' ? '/novosti' : `/novosti/clanak/${n.id}`;
+    const getMainLink = (n: any) => n.id === 'default-1' ? '/novosti' : `/novosti/${n.id}`;
 
     return (
         <section className="py-20 lg:py-24 bg-gradient-to-b from-[var(--background-alt)] to-[var(--background)] relative overflow-hidden">
@@ -34,12 +34,19 @@ export default function Hero({ featuredNews }: HeroProps) {
                     <div className="lg:col-span-2">
                         <Link href={getMainLink(mainArticle)} className="group block relative rounded-[32px] overflow-hidden h-[500px] lg:h-[600px] shadow-2xl hover:shadow-[0_20px_40px_rgba(24,72,143,0.3)] transition-all duration-700">
                             {/* Animated gradient background */}
-                            <div className="absolute inset-0 image-placeholder">
-                                <img
-                                    src={getMainImage(mainArticle)}
-                                    alt={mainArticle.title}
-                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                />
+                            {/* Image Container */}
+                            <div className="absolute inset-0">
+                                {getMainImage(mainArticle) ? (
+                                    <img
+                                        src={getMainImage(mainArticle)}
+                                        alt={mainArticle.title}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                        <span className="text-gray-400">No Image</span>
+                                    </div>
+                                )}
                                 <div className="absolute inset-0 bg-black/20" /> {/* Dimmer */}
                             </div>
 
@@ -76,7 +83,7 @@ export default function Hero({ featuredNews }: HeroProps) {
                         {subArticles.length > 0 ? subArticles.map((article, index) => (
                             <Link
                                 key={article.id}
-                                href={`/novosti/clanak/${article.id}`}
+                                href={`/novosti/${article.id}`}
                                 className="group relative rounded-[28px] overflow-hidden h-[240px] lg:h-[290px] flex-1 shadow-xl hover:shadow-2xl transition-all duration-700"
                             >
                                 <div className="absolute inset-0">

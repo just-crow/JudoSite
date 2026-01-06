@@ -79,13 +79,24 @@ export default function DojoPage() {
                 </div>
 
                 {/* Location Map */}
+                {/* Location Map */}
                 <div className="card p-6 animate-fade-in-up" style={{ animationDelay: '500ms' }}>
                     <h2 className="text-xl font-bold text-white mb-6">Gdje se nalazimo?</h2>
-                    <div className="h-96 bg-[var(--background)] rounded-xl flex items-center justify-center border border-[var(--border)]">
-                        <span className="text-[var(--text-muted)]">[Interactive Google Map here]</span>
+                    <div className="h-96 bg-[var(--background)] rounded-xl overflow-hidden border border-[var(--border)]">
+                        <iframe
+                            width="100%"
+                            height="100%"
+                            id="gmap_canvas_dojo"
+                            src="https://maps.google.com/maps?q=Kemala+Kapetanovica+43+Sarajevo&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                            frameBorder="0"
+                            scrolling="no"
+                            marginHeight={0}
+                            marginWidth={0}
+                            title="Dojo Location"
+                        ></iframe>
                     </div>
                     <p className="mt-4 text-[var(--text-secondary)] text-center">
-                        Ulica Zmaja od Bosne 123, 71000 Sarajevo (Glavni ulaz)
+                        Kemala Kapetanovića 43, 71000 Sarajevo (Glavni ulaz)
                     </p>
                 </div>
             </div>

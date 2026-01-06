@@ -2,6 +2,7 @@ import { getAlbum, updateAlbum, addImagesToAlbum, removeImageFromAlbum } from '@
 import { verifySession } from '@/actions/auth'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import AlbumUploader from '@/components/AlbumUploader'
 
 export default async function EditAlbumPage({ params }: { params: { id: string } }) {
     await verifySession()
@@ -98,26 +99,11 @@ export default async function EditAlbumPage({ params }: { params: { id: string }
                         </div>
                         <div className="text-center text-sm text-[var(--text-secondary)] font-medium">- ILI -</div>
                         <div>
-                            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Upload Slike</label>
-                            <div className="relative border-2 border-dashed border-[var(--border)] rounded-xl p-6 text-center hover:border-[var(--primary)] transition-colors cursor-pointer bg-[var(--background-alt)]">
-                                <input
-                                    name="file"
-                                    type="file"
-                                    accept="image/*"
-                                    className="w-full h-full opacity-0 absolute inset-0 cursor-pointer"
-                                />
-                                <div className="pointer-events-none">
-                                    <svg className="w-8 h-8 mx-auto text-[var(--text-secondary)] mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <span className="text-sm text-[var(--text-secondary)]">Klikni za upload nove slike</span>
-                                </div>
-                            </div>
+                            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Upload Slike (Bulk)</label>
+                            <AlbumUploader albumId={album.id} />
                         </div>
 
-                        <div className="pt-4">
-                            <button type="submit" className="btn-secondary w-full justify-center">Dodaj Sliku</button>
-                        </div>
+                        {/* Button removed as upload is automatic now */}
                     </form>
                 </div>
             </div>

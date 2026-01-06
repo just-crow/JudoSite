@@ -2,14 +2,8 @@
 
 import { supabase } from '@/lib/supabase'
 
-export async function uploadFile(formData: FormData): Promise<string> {
-    const file = formData.get('file') as File
-
-    if (!file) {
-        throw new Error('No file uploaded')
-    }
-
-    const uniqueId = Date.now().toString()
+export async function uploadFileObject(file: File): Promise<string> {
+    const uniqueId = Date.now().toString() + Math.random().toString(36).substring(7)
     const extension = file.name.split('.').pop()
     const filename = `${uniqueId}.${extension}`
 
@@ -36,4 +30,14 @@ export async function uploadFile(formData: FormData): Promise<string> {
         .getPublicUrl(filename)
 
     return publicUrl
+}
+
+export async function uploadFile(formData: FormData): Promise<string> {
+    const file = formData.get('file') as File
+
+    if (!file) {
+        throw new Error('No file uploaded')
+    }
+
+    return uploadFileObject(file)
 }

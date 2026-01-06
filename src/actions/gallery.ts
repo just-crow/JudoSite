@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { verifySession } from './auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { uploadFile } from './file-upload'
+import { uploadFile, uploadFileObject } from './file-upload'
 
 export interface GalleryAlbum {
     id: string
@@ -141,18 +141,22 @@ export async function addImagesToAlbum(id: string, formData: FormData) {
 
     const newImages: string[] = []
 
-    // Handle File Upload
-    const file = formData.get('file') as File
-    if (file && file.size > 0 && file.name !== 'undefined') {
+    // Handle Multiple Files Upload
+    const files = formData.getAll('file') as File[]
+    const validFiles = files.filter(f => f.size > 0 && f.name !== 'undefined')
+
+    if (validFiles.length > 0) {
         try {
-            const url = await uploadFile(formData)
-            newImages.push(url)
+            // Upload all files in parallel
+            const uploadPromises = validFiles.map(file => uploadFileObject(file))
+            const uploadedUrls = await Promise.all(uploadPromises)
+            newImages.push(...uploadedUrls)
         } catch (e) {
-            console.error("Image upload failed", e)
+            console.error("Bulk upload failed", e)
         }
     }
 
-    // Handle URL input
+    // Handle URL input (legacy support or text input)
     const urlInput = formData.get('imageUrl') as string
     if (urlInput) {
         newImages.push(urlInput)

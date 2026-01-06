@@ -23,7 +23,7 @@ export default async function AlbumPage({ params }: { params: { id: string } }) 
     return (
         <main className="min-h-screen bg-[var(--background)]">
             {/* Hero / Header */}
-            <section className="relative py-20 lg:py-32 overflow-hidden">
+            <section className="relative mt-12 overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center -z-20"
                     style={{ backgroundImage: `url(${album.coverImage})` }}
@@ -31,7 +31,7 @@ export default async function AlbumPage({ params }: { params: { id: string } }) 
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/80 to-[var(--primary-dark)]/80 -z-10" />
 
                 <div className="container relative z-10">
-                    <Link href="/novosti/galerije" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-8 transition-colors group">
+                    <Link href="/novosti/galerije" className="inline-flex items-center gap-2 text-black hover:text-gray-600 mb-8 transition-colors group">
                         <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/20 transition-all">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -40,7 +40,7 @@ export default async function AlbumPage({ params }: { params: { id: string } }) 
                         <span className="font-medium">Nazad na galerije</span>
                     </Link>
 
-                    <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6 animate-fade-in-up">
+                    <h1 className="text-4xl lg:text-6xl font-bold text-black mb-6 animate-fade-in-up">
                         {album.title}
                     </h1>
 

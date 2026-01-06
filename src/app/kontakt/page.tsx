@@ -38,7 +38,7 @@ export default function KontaktPage() {
                             </h3>
                             <p className="text-[var(--text-secondary)]">
                                 Judo Klub Željezničar<br />
-                                Ulica Zmaja od Bosne 123<br />
+                                Kemala Kapetanovića 43<br />
                                 71000 Sarajevo<br />
                                 Bosna i Hercegovina
                             </p>
@@ -87,6 +87,21 @@ export default function KontaktPage() {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                {/* Map Section */}
+                <div className="mt-12 rounded-3xl overflow-hidden shadow-2xl h-[400px] animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+                    <iframe
+                        width="100%"
+                        height="100%"
+                        id="gmap_canvas"
+                        src="https://maps.google.com/maps?q=Kemala+Kapetanovica+43+Sarajevo&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                        frameBorder="0"
+                        scrolling="no"
+                        marginHeight={0}
+                        marginWidth={0}
+                        title="Dojo Location"
+                    ></iframe>
                 </div>
             </div>
         </div>

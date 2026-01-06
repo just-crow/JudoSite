@@ -125,7 +125,7 @@ export default async function Home() {
                   category={news.tags?.[0] || "Novosti"}
                   date={news.date}
                   image={news.image}
-                  href={`/novosti/clanak/${news.id}`}
+                  href={`/novosti/${news.id}`}
                   size={index === 0 ? 'large' : 'medium'} // First item is large
                 />
               ))
@@ -230,8 +230,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </main>
   );
 }

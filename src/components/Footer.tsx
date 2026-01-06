@@ -42,9 +42,7 @@ export default async function Footer() {
                     {/* Brand Section */}
                     <div className="lg:col-span-1 space-y-6">
                         <Link href="/" className="inline-block group">
-                            <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/20 transition-colors border border-white/10">
-                                <span className="text-4xl font-bold">柔</span>
-                            </div>
+                            <img src='/ZeljeznicarIcon.png' className="w-40 h-40 rounded-2xl flex items-center justify-center mb-4" />
                             <h2 className="text-2xl font-bold mb-1">Judo Klub</h2>
                             <p className="text-white/60 text-sm">Željezničar</p>
                         </Link>
@@ -104,7 +102,7 @@ export default async function Footer() {
                         <div className="space-y-4">
                             <div className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
                                 <p className="text-xs text-[var(--accent)] font-bold uppercase tracking-wider mb-1">Adresa</p>
-                                <p className="text-sm font-medium">Mula Mustafe Bašeskije 12</p>
+                                <p className="text-sm font-medium">Kemala Kapetanovića 43</p>
                                 <p className="text-sm text-white/60">71000 Sarajevo, BiH</p>
                             </div>
                             <div className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
