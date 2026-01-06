@@ -1,13 +1,10 @@
 'use server'
 
-import fs from 'fs/promises'
-import path from 'path'
+import { supabase } from '@/lib/supabase'
 import { verifySession } from './auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { uploadFile } from './file-upload'
-
-const DATA_FILE = path.join(process.cwd(), 'src/data/competitors.json')
 
 export interface Competitor {
     id: string
@@ -21,12 +18,23 @@ export interface Competitor {
 }
 
 export async function getCompetitors(): Promise<Competitor[]> {
-    try {
-        const data = await fs.readFile(DATA_FILE, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        return []
-    }
+    const { data, error } = await supabase
+        .from('competitors')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    if (error || !data) return []
+
+    return data.map((item: any) => ({
+        id: item.id,
+        name: `${item.first_name} ${item.last_name}`,
+        category: item.category || '',
+        ageGroup: item.birth_year || '',
+        rank: item.belt || '',
+        description: '', // description might not be in DB schema, defaulting empty
+        image: item.image || '',
+        achievements: item.results ? item.results.split('\n') : []
+    }))
 }
 
 export async function createCompetitor(formData: FormData) {
@@ -38,6 +46,11 @@ export async function createCompetitor(formData: FormData) {
     const rank = formData.get('rank') as string
     const description = formData.get('description') as string
 
+    // Split name
+    const nameParts = name.trim().split(' ')
+    const firstName = nameParts[0]
+    const lastName = nameParts.slice(1).join(' ') || ''
+
     // Image Upload
     let image = ''
     const file = formData.get('file') as File
@@ -49,28 +62,47 @@ export async function createCompetitor(formData: FormData) {
         }
     }
 
-    const newCompetitor: Competitor = {
-        id: Date.now().toString(),
-        name,
+    const newItem = {
+        first_name: firstName,
+        last_name: lastName,
         category,
-        ageGroup,
-        rank,
-        description,
+        birth_year: ageGroup,
+        belt: rank,
         image,
-        achievements: [] // Handle separate input if needed
+        results: '' // achievements not passed in form, usually added later or need field
     }
 
-    const competitors = await getCompetitors()
-    competitors.unshift(newCompetitor)
-    await fs.writeFile(DATA_FILE, JSON.stringify(competitors, null, 2))
+    const { error } = await supabase.from('competitors').insert(newItem)
+
+    if (error) {
+        console.error("Error creating competitor", error)
+        return
+    }
+
     revalidatePath('/takmicari')
     revalidatePath('/admin/competitors')
     redirect('/admin/competitors')
 }
 
 export async function getCompetitor(id: string) {
-    const competitors = await getCompetitors()
-    return competitors.find(c => c.id === id)
+    const { data, error } = await supabase
+        .from('competitors')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+    if (error || !data) return undefined
+
+    return {
+        id: data.id,
+        name: `${data.first_name} ${data.last_name}`,
+        category: data.category || '',
+        ageGroup: data.birth_year || '',
+        rank: data.belt || '',
+        description: '',
+        image: data.image || '',
+        achievements: data.results ? data.results.split('\n') : []
+    }
 }
 
 export async function updateCompetitor(id: string, formData: FormData) {
@@ -82,6 +114,11 @@ export async function updateCompetitor(id: string, formData: FormData) {
     const rank = formData.get('rank') as string
     const description = formData.get('description') as string
 
+    // Split name
+    const nameParts = name.trim().split(' ')
+    const firstName = nameParts[0]
+    const lastName = nameParts.slice(1).join(' ') || ''
+
     // Image Upload
     const file = formData.get('file') as File
     let image = ''
@@ -93,33 +130,39 @@ export async function updateCompetitor(id: string, formData: FormData) {
         }
     }
 
-    const competitors = await getCompetitors()
-    const index = competitors.findIndex(c => c.id === id)
-
-    if (index !== -1) {
-        // Keep old image if no new one uploaded
-        if (!image) {
-            image = competitors[index].image
-        }
-
-        competitors[index] = {
-            ...competitors[index],
-            name, category, ageGroup, rank, description, image
-        }
-
-        await fs.writeFile(DATA_FILE, JSON.stringify(competitors, null, 2))
-        revalidatePath('/takmicari')
-        revalidatePath('/admin/competitors')
+    // Prepare update object
+    const updateData: any = {
+        first_name: firstName,
+        last_name: lastName,
+        category,
+        birth_year: ageGroup,
+        belt: rank,
     }
 
+    if (image) {
+        updateData.image = image
+    }
+
+    const { error } = await supabase
+        .from('competitors')
+        .update(updateData)
+        .eq('id', id)
+
+    if (error) {
+        console.error("Error updating competitor", error)
+        return
+    }
+
+    revalidatePath('/takmicari')
+    revalidatePath('/admin/competitors')
     redirect('/admin/competitors')
 }
 
 export async function deleteCompetitor(id: string) {
     await verifySession()
-    const competitors = await getCompetitors()
-    const filtered = competitors.filter(c => c.id !== id)
-    await fs.writeFile(DATA_FILE, JSON.stringify(filtered, null, 2))
+
+    await supabase.from('competitors').delete().eq('id', id)
+
     revalidatePath('/takmicari')
     revalidatePath('/admin/competitors')
 }

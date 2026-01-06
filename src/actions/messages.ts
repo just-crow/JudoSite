@@ -1,12 +1,9 @@
 'use server'
 
-import fs from 'fs/promises'
-import path from 'path'
+import { supabase } from '@/lib/supabase'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { verifySession } from './auth'
-
-const DATA_FILE = path.join(process.cwd(), 'src/data/messages.json')
 
 export interface ContactMessage {
     id: string
@@ -21,12 +18,24 @@ export interface ContactMessage {
 }
 
 export async function getMessages(): Promise<ContactMessage[]> {
-    try {
-        const data = await fs.readFile(DATA_FILE, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        return []
-    }
+    const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    if (error || !data) return []
+
+    return data.map((item: any) => ({
+        id: item.id,
+        firstName: item.first_name,
+        lastName: item.last_name,
+        email: item.email,
+        phone: item.phone,
+        subject: item.subject,
+        message: item.message,
+        createdAt: item.created_at,
+        read: item.read
+    }))
 }
 
 export async function sendMessage(formData: FormData) {
@@ -38,51 +47,45 @@ export async function sendMessage(formData: FormData) {
     const message = formData.get('message') as string
 
     if (!firstName || !email || !message) {
-        // Basic validation
         return { success: false, error: 'Molimo ispunite obavezna polja.' }
     }
 
-    const newMessage: ContactMessage = {
-        id: Date.now().toString(),
-        firstName,
-        lastName,
+    const newItem = {
+        first_name: firstName,
+        last_name: lastName,
         email,
         phone,
         subject,
         message,
-        createdAt: new Date().toISOString(),
         read: false
     }
 
-    const messages = await getMessages()
-    messages.unshift(newMessage)
+    const { error } = await supabase.from('messages').insert(newItem)
 
-    await fs.writeFile(DATA_FILE, JSON.stringify(messages, null, 2))
+    if (error) {
+        console.error("Error sending message", error)
+        return { success: false, error: 'Greška pri slanju poruke.' }
+    }
 
-    // In a real app we might send an email here too
-
-    // Return success to update UI
     return { success: true }
 }
 
 export async function deleteMessage(id: string) {
     await verifySession()
-    const messages = await getMessages()
-    const filtered = messages.filter(m => m.id !== id)
 
-    await fs.writeFile(DATA_FILE, JSON.stringify(filtered, null, 2))
+    await supabase.from('messages').delete().eq('id', id)
+
     revalidatePath('/admin/messages')
     redirect('/admin/messages')
 }
 
 export async function markAsRead(id: string) {
     await verifySession()
-    const messages = await getMessages()
-    const index = messages.findIndex(m => m.id === id)
 
-    if (index !== -1) {
-        messages[index].read = true
-        await fs.writeFile(DATA_FILE, JSON.stringify(messages, null, 2))
-        revalidatePath('/admin/messages')
-    }
+    await supabase
+        .from('messages')
+        .update({ read: true })
+        .eq('id', id)
+
+    revalidatePath('/admin/messages')
 }

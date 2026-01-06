@@ -1,13 +1,10 @@
 'use server'
 
-import fs from 'fs/promises'
-import path from 'path'
+import { supabase } from '@/lib/supabase'
 import { verifySession } from './auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { uploadFile } from './file-upload'
-
-const DATA_FILE = path.join(process.cwd(), 'src/data/gallery.json')
 
 export interface GalleryAlbum {
     id: string
@@ -18,17 +15,39 @@ export interface GalleryAlbum {
 }
 
 export async function getAlbums(): Promise<GalleryAlbum[]> {
-    try {
-        const data = await fs.readFile(DATA_FILE, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        return []
-    }
+    const { data, error } = await supabase
+        .from('gallery')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    if (error || !data) return []
+
+    // Map DB snake_case to CamelCase
+    return data.map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        date: item.date,
+        coverImage: item.cover_image,
+        images: item.images || []
+    }))
 }
 
 export async function getAlbum(id: string): Promise<GalleryAlbum | null> {
-    const albums = await getAlbums()
-    return albums.find(a => a.id === id) || null
+    const { data, error } = await supabase
+        .from('gallery')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+    if (error || !data) return null
+
+    return {
+        id: data.id,
+        title: data.title,
+        date: data.date,
+        coverImage: data.cover_image,
+        images: data.images || []
+    }
 }
 
 export async function createAlbum(formData: FormData) {
@@ -52,18 +71,20 @@ export async function createAlbum(formData: FormData) {
     const imagesInput = formData.get('images') as string
     const images = imagesInput ? imagesInput.split(',').map(s => s.trim()).filter(s => s) : []
 
-    const newAlbum: GalleryAlbum = {
-        id: Date.now().toString(),
+    const newAlbum = {
         title,
         date,
-        coverImage: coverImage || 'https://images.unsplash.com/photo-1544367563-12123d832d34?auto=format&fit=crop&q=80',
+        cover_image: coverImage || 'https://images.unsplash.com/photo-1544367563-12123d832d34?auto=format&fit=crop&q=80',
         images: images.length > 0 ? images : [coverImage]
     }
 
-    const albums = await getAlbums()
-    albums.unshift(newAlbum)
+    const { error } = await supabase.from('gallery').insert(newAlbum)
 
-    await fs.writeFile(DATA_FILE, JSON.stringify(albums, null, 2))
+    if (error) {
+        console.error("Error creating album", error)
+        return
+    }
+
     revalidatePath('/admin/gallery')
     revalidatePath('/novosti/galerije')
     redirect('/admin/gallery')
@@ -88,31 +109,35 @@ export async function updateAlbum(id: string, formData: FormData) {
         }
     }
 
-    const albums = await getAlbums()
-    const index = albums.findIndex(a => a.id === id)
+    // Get existing album to check if cover needs fallback
+    const existing = await getAlbum(id)
+    if (!existing) return
 
-    if (index !== -1) {
-        albums[index] = {
-            ...albums[index],
+    const { error } = await supabase
+        .from('gallery')
+        .update({
             title,
             date,
-            coverImage: coverImage || albums[index].coverImage
-        }
-        await fs.writeFile(DATA_FILE, JSON.stringify(albums, null, 2))
-        revalidatePath('/admin/gallery')
-        revalidatePath(`/admin/gallery/${id}`)
-        revalidatePath('/novosti/galerije')
-        revalidatePath(`/novosti/galerije/${id}`)
+            cover_image: coverImage || existing.coverImage
+        })
+        .eq('id', id)
+
+    if (error) {
+        console.error("Error updating album", error)
+        return
     }
+
+    revalidatePath('/admin/gallery')
+    revalidatePath(`/admin/gallery/${id}`)
+    revalidatePath('/novosti/galerije')
+    revalidatePath(`/novosti/galerije/${id}`)
 }
 
 export async function addImagesToAlbum(id: string, formData: FormData) {
     await verifySession()
 
-    const albums = await getAlbums()
-    const index = albums.findIndex(a => a.id === id)
-
-    if (index === -1) return
+    const album = await getAlbum(id)
+    if (!album) return
 
     const newImages: string[] = []
 
@@ -134,8 +159,14 @@ export async function addImagesToAlbum(id: string, formData: FormData) {
     }
 
     if (newImages.length > 0) {
-        albums[index].images = [...albums[index].images, ...newImages]
-        await fs.writeFile(DATA_FILE, JSON.stringify(albums, null, 2))
+        // Append to existing images
+        const updatedImages = [...album.images, ...newImages]
+
+        await supabase
+            .from('gallery')
+            .update({ images: updatedImages })
+            .eq('id', id)
+
         revalidatePath(`/admin/gallery/${id}`)
         revalidatePath(`/novosti/galerije/${id}`)
     }
@@ -144,24 +175,25 @@ export async function addImagesToAlbum(id: string, formData: FormData) {
 export async function removeImageFromAlbum(id: string, imageUrl: string) {
     await verifySession()
 
-    const albums = await getAlbums()
-    const index = albums.findIndex(a => a.id === id)
+    const album = await getAlbum(id)
+    if (!album) return
 
-    if (index !== -1) {
-        albums[index].images = albums[index].images.filter(img => img !== imageUrl)
-        await fs.writeFile(DATA_FILE, JSON.stringify(albums, null, 2))
-        revalidatePath(`/admin/gallery/${id}`)
-        revalidatePath(`/novosti/galerije/${id}`)
-    }
+    const updatedImages = album.images.filter(img => img !== imageUrl)
+
+    await supabase
+        .from('gallery')
+        .update({ images: updatedImages })
+        .eq('id', id)
+
+    revalidatePath(`/admin/gallery/${id}`)
+    revalidatePath(`/novosti/galerije/${id}`)
 }
 
 export async function deleteAlbum(id: string) {
     await verifySession()
 
-    const albums = await getAlbums()
-    const filtered = albums.filter(item => item.id !== id)
+    await supabase.from('gallery').delete().eq('id', id)
 
-    await fs.writeFile(DATA_FILE, JSON.stringify(filtered, null, 2))
     revalidatePath('/admin/gallery')
     revalidatePath('/novosti/galerije')
 }

@@ -1,12 +1,9 @@
 'use server'
 
-import fs from 'fs/promises'
-import path from 'path'
+import { supabase } from '@/lib/supabase'
 import { verifySession } from './auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-
-const DATA_FILE = path.join(process.cwd(), 'src/data/competitions.json')
 
 export interface Competition {
     id: string
@@ -18,12 +15,21 @@ export interface Competition {
 }
 
 export async function getCompetitions(): Promise<Competition[]> {
-    try {
-        const data = await fs.readFile(DATA_FILE, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        return []
-    }
+    const { data, error } = await supabase
+        .from('competitions')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    if (error || !data) return []
+
+    return data.map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        date: item.date,
+        location: item.location,
+        description: item.description,
+        registrationLink: item.application_link || ''
+    }))
 }
 
 export async function createCompetition(formData: FormData) {
@@ -35,22 +41,43 @@ export async function createCompetition(formData: FormData) {
     const description = formData.get('description') as string
     const registrationLink = formData.get('registrationLink') as string
 
-    const newItem: Competition = {
-        id: Date.now().toString(),
-        title, date, location, description, registrationLink
+    const newItem = {
+        title,
+        date,
+        location,
+        description,
+        application_link: registrationLink
     }
 
-    const items = await getCompetitions()
-    items.unshift(newItem)
-    await fs.writeFile(DATA_FILE, JSON.stringify(items, null, 2))
+    const { error } = await supabase.from('competitions').insert(newItem)
+
+    if (error) {
+        console.error("Error creating competition", error)
+        return
+    }
+
     revalidatePath('/')
     revalidatePath('/admin/competitions')
     redirect('/admin/competitions')
 }
 
 export async function getCompetition(id: string) {
-    const items = await getCompetitions()
-    return items.find(i => i.id === id)
+    const { data, error } = await supabase
+        .from('competitions')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+    if (error || !data) return null
+
+    return {
+        id: data.id,
+        title: data.title,
+        date: data.date,
+        location: data.location,
+        description: data.description,
+        registrationLink: data.application_link || ''
+    }
 }
 
 export async function updateCompetition(id: string, formData: FormData) {
@@ -62,27 +89,31 @@ export async function updateCompetition(id: string, formData: FormData) {
     const description = formData.get('description') as string
     const registrationLink = formData.get('registrationLink') as string
 
-    const items = await getCompetitions()
-    const index = items.findIndex(i => i.id === id)
+    const { error } = await supabase
+        .from('competitions')
+        .update({
+            title,
+            date,
+            location,
+            description,
+            application_link: registrationLink
+        })
+        .eq('id', id)
 
-    if (index !== -1) {
-        items[index] = {
-            ...items[index],
-            title, date, location, description, registrationLink
-        }
-
-        await fs.writeFile(DATA_FILE, JSON.stringify(items, null, 2))
-        revalidatePath('/')
-        revalidatePath('/admin/competitions')
+    if (error) {
+        console.error("Error updating competition", error)
+        return
     }
 
+    revalidatePath('/')
+    revalidatePath('/admin/competitions')
     redirect('/admin/competitions')
 }
 
 export async function deleteCompetition(id: string) {
     await verifySession()
-    const items = await getCompetitions()
-    const filtered = items.filter(i => i.id !== id)
-    await fs.writeFile(DATA_FILE, JSON.stringify(filtered, null, 2))
+
+    await supabase.from('competitions').delete().eq('id', id)
+
     revalidatePath('/admin/competitions')
 }

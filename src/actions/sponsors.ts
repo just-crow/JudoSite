@@ -1,13 +1,10 @@
 'use server'
 
-import fs from 'fs/promises'
-import path from 'path'
+import { supabase } from '@/lib/supabase'
 import { verifySession } from './auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { uploadFile } from './file-upload'
-
-const DATA_FILE = path.join(process.cwd(), 'src/data/sponsors.json')
 
 export interface Sponsor {
     id: string
@@ -17,12 +14,19 @@ export interface Sponsor {
 }
 
 export async function getSponsors(): Promise<Sponsor[]> {
-    try {
-        const data = await fs.readFile(DATA_FILE, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        return []
-    }
+    const { data, error } = await supabase
+        .from('sponsors')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    if (error || !data) return []
+
+    return data.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        logo: item.logo,
+        website: item.website
+    }))
 }
 
 export async function createSponsor(formData: FormData) {
@@ -42,22 +46,37 @@ export async function createSponsor(formData: FormData) {
         }
     }
 
-    const newItem: Sponsor = {
-        id: Date.now().toString(),
-        name, website, logo
+    const newItem = {
+        name, website, logo, partner_type: 'gold' // Default or add field
     }
 
-    const items = await getSponsors()
-    items.unshift(newItem)
-    await fs.writeFile(DATA_FILE, JSON.stringify(items, null, 2))
+    const { error } = await supabase.from('sponsors').insert(newItem)
+
+    if (error) {
+        console.error("Error creating sponsor", error)
+        return
+    }
+
     revalidatePath('/')
     revalidatePath('/admin/sponsors')
     redirect('/admin/sponsors')
 }
 
 export async function getSponsor(id: string) {
-    const items = await getSponsors()
-    return items.find(i => i.id === id)
+    const { data, error } = await supabase
+        .from('sponsors')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+    if (error || !data) return undefined
+
+    return {
+        id: data.id,
+        name: data.name,
+        logo: data.logo,
+        website: data.website
+    }
 }
 
 export async function updateSponsor(id: string, formData: FormData) {
@@ -77,29 +96,28 @@ export async function updateSponsor(id: string, formData: FormData) {
         }
     }
 
-    const items = await getSponsors()
-    const index = items.findIndex(i => i.id === id)
+    const updateData: any = { name, website }
+    if (logo) updateData.logo = logo
 
-    if (index !== -1) {
-        if (!logo) logo = items[index].logo
+    const { error } = await supabase
+        .from('sponsors')
+        .update(updateData)
+        .eq('id', id)
 
-        items[index] = {
-            ...items[index],
-            name, website, logo
-        }
-
-        await fs.writeFile(DATA_FILE, JSON.stringify(items, null, 2))
-        revalidatePath('/')
-        revalidatePath('/admin/sponsors')
+    if (error) {
+        console.error("Error updating sponsor", error)
+        return
     }
 
+    revalidatePath('/')
+    revalidatePath('/admin/sponsors')
     redirect('/admin/sponsors')
 }
 
 export async function deleteSponsor(id: string) {
     await verifySession()
-    const items = await getSponsors()
-    const filtered = items.filter(i => i.id !== id)
-    await fs.writeFile(DATA_FILE, JSON.stringify(filtered, null, 2))
+
+    await supabase.from('sponsors').delete().eq('id', id)
+
     revalidatePath('/admin/sponsors')
 }

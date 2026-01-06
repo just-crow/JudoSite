@@ -1,13 +1,10 @@
 'use server'
 
-import fs from 'fs/promises'
-import path from 'path'
+import { supabase } from '@/lib/supabase'
 import { verifySession } from './auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { uploadFile } from './file-upload'
-
-const DATA_FILE = path.join(process.cwd(), 'src/data/news.json')
 
 export interface NewsItem {
     id: string
@@ -21,12 +18,17 @@ export interface NewsItem {
 }
 
 export async function getNews(): Promise<NewsItem[]> {
-    try {
-        const data = await fs.readFile(DATA_FILE, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
+    const { data, error } = await supabase
+        .from('news')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    if (error) {
+        console.error('Error fetching news:', error)
         return []
     }
+
+    return data as NewsItem[]
 }
 
 export async function addNews(formData: FormData) {
@@ -46,12 +48,10 @@ export async function addNews(formData: FormData) {
             image = await uploadFile(formData)
         } catch (e) {
             console.error("Upload failed", e)
-            // fallback to placeholder or keep url
         }
     }
 
-    const newItem: NewsItem = {
-        id: Date.now().toString(),
+    const newItem = {
         title,
         date,
         excerpt: content.substring(0, 100) + '...',
@@ -61,10 +61,15 @@ export async function addNews(formData: FormData) {
         featured
     }
 
-    const news = await getNews()
-    news.unshift(newItem)
+    const { error } = await supabase
+        .from('news')
+        .insert(newItem)
 
-    await fs.writeFile(DATA_FILE, JSON.stringify(news, null, 2))
+    if (error) {
+        console.error('Error adding news:', error)
+        return
+    }
+
     revalidatePath('/admin/news')
     revalidatePath('/novosti')
     revalidatePath('/') // Revalidate homepage too
@@ -74,10 +79,16 @@ export async function addNews(formData: FormData) {
 export async function deleteNews(id: string) {
     await verifySession()
 
-    const news = await getNews()
-    const filtered = news.filter(item => item.id !== id)
+    const { error } = await supabase
+        .from('news')
+        .delete()
+        .eq('id', id)
 
-    await fs.writeFile(DATA_FILE, JSON.stringify(filtered, null, 2))
+    if (error) {
+        console.error('Error deleting news:', error)
+        return
+    }
+
     revalidatePath('/admin/news')
     revalidatePath('/novosti')
     revalidatePath('/')

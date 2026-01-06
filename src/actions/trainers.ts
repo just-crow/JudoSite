@@ -1,13 +1,10 @@
 'use server'
 
-import fs from 'fs/promises'
-import path from 'path'
+import { supabase } from '@/lib/supabase'
 import { verifySession } from './auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { uploadFile } from './file-upload'
-
-const DATA_FILE = path.join(process.cwd(), 'src/data/trainers.json')
 
 export interface Trainer {
     id: string
@@ -21,12 +18,23 @@ export interface Trainer {
 }
 
 export async function getTrainers(): Promise<Trainer[]> {
-    try {
-        const data = await fs.readFile(DATA_FILE, 'utf-8')
-        return JSON.parse(data)
-    } catch (error) {
-        return []
-    }
+    const { data, error } = await supabase
+        .from('trainers')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+    if (error || !data) return []
+
+    return data.map((item: any) => ({
+        id: item.id,
+        name: `${item.first_name} ${item.last_name}`,
+        role: item.role,
+        rank: item.rank,
+        image: item.image,
+        bio: item.bio,
+        email: item.email,
+        phone: item.phone
+    }))
 }
 
 export async function createTrainer(formData: FormData) {
@@ -39,6 +47,11 @@ export async function createTrainer(formData: FormData) {
     const email = formData.get('email') as string
     const phone = formData.get('phone') as string
 
+    // Split name
+    const nameParts = name.trim().split(' ')
+    const firstName = nameParts[0]
+    const lastName = nameParts.slice(1).join(' ') || ''
+
     // Image Upload
     let image = ''
     const file = formData.get('file') as File
@@ -50,22 +63,43 @@ export async function createTrainer(formData: FormData) {
         }
     }
 
-    const newItem: Trainer = {
-        id: Date.now().toString(),
-        name, role, rank, bio, email, phone, image
+    const newItem = {
+        first_name: firstName,
+        last_name: lastName,
+        role, rank, bio, email, phone, image
     }
 
-    const items = await getTrainers()
-    items.unshift(newItem)
-    await fs.writeFile(DATA_FILE, JSON.stringify(items, null, 2))
+    const { error } = await supabase.from('trainers').insert(newItem)
+
+    if (error) {
+        console.error("Error creating trainer", error)
+        return
+    }
+
     revalidatePath('/treneri')
     revalidatePath('/admin/trainers')
     redirect('/admin/trainers')
 }
 
 export async function getTrainer(id: string) {
-    const items = await getTrainers()
-    return items.find(i => i.id === id)
+    const { data, error } = await supabase
+        .from('trainers')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+    if (error || !data) return undefined
+
+    return {
+        id: data.id,
+        name: `${data.first_name} ${data.last_name}`,
+        role: data.role,
+        rank: data.rank,
+        image: data.image,
+        bio: data.bio,
+        email: data.email,
+        phone: data.phone
+    }
 }
 
 export async function updateTrainer(id: string, formData: FormData) {
@@ -78,6 +112,11 @@ export async function updateTrainer(id: string, formData: FormData) {
     const email = formData.get('email') as string
     const phone = formData.get('phone') as string
 
+    // Split name
+    const nameParts = name.trim().split(' ')
+    const firstName = nameParts[0]
+    const lastName = nameParts.slice(1).join(' ') || ''
+
     // Image Upload
     const file = formData.get('file') as File
     let image = ''
@@ -89,30 +128,36 @@ export async function updateTrainer(id: string, formData: FormData) {
         }
     }
 
-    const items = await getTrainers()
-    const index = items.findIndex(i => i.id === id)
-
-    if (index !== -1) {
-        if (!image) image = items[index].image
-
-        items[index] = {
-            ...items[index],
-            name, role, rank, bio, email, phone, image
-        }
-
-        await fs.writeFile(DATA_FILE, JSON.stringify(items, null, 2))
-        revalidatePath('/treneri')
-        revalidatePath('/admin/trainers')
+    const updateData: any = {
+        first_name: firstName,
+        last_name: lastName,
+        role, rank, bio, email, phone
     }
 
+    if (image) {
+        updateData.image = image
+    }
+
+    const { error } = await supabase
+        .from('trainers')
+        .update(updateData)
+        .eq('id', id)
+
+    if (error) {
+        console.error("Error updating trainer", error)
+        return
+    }
+
+    revalidatePath('/treneri')
+    revalidatePath('/admin/trainers')
     redirect('/admin/trainers')
 }
 
 export async function deleteTrainer(id: string) {
     await verifySession()
-    const items = await getTrainers()
-    const filtered = items.filter(i => i.id !== id)
-    await fs.writeFile(DATA_FILE, JSON.stringify(filtered, null, 2))
+
+    await supabase.from('trainers').delete().eq('id', id)
+
     revalidatePath('/treneri')
     revalidatePath('/admin/trainers')
 }
