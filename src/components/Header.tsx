@@ -158,19 +158,21 @@ export default function Header() {
                     )}
                   </Link>
                   {item.submenu && activeSubmenu === item.label && (
-                    <div className="absolute top-full left-0 mt-2 w-72 bg-white backdrop-blur-xl rounded-xl shadow-2xl border border-[var(--border)] overflow-hidden animate-fade-in-up">
-                      {/* Dropdown with moderate padding */}
-                      <div className="py-3 px-2">
-                        {item.submenu.map((subItem, index) => (
-                          <Link
-                            key={subItem.label}
-                            href={subItem.href}
-                            className="block mx-1 px-4 py-3 text-[var(--text-secondary)] hover:bg-gradient-to-r hover:from-[var(--primary)] hover:to-[var(--primary-light)] hover:text-white transition-all rounded-lg font-medium text-sm"
-                            style={{ animationDelay: `${index * 30}ms` }}
-                          >
-                            {subItem.label}
-                          </Link>
-                        ))}
+                    <div className="absolute top-full left-0 pt-2 w-72">
+                      <div className="bg-white/95 backdrop-blur-xl rounded-xl shadow-2xl border border-[var(--border)] overflow-hidden animate-fade-in-up">
+                        {/* Dropdown with moderate padding */}
+                        <div className="py-2 px-1">
+                          {item.submenu.map((subItem, index) => (
+                            <Link
+                              key={subItem.label}
+                              href={subItem.href}
+                              className="block mx-1 px-4 py-3 text-[var(--text-secondary)] hover:bg-gradient-to-r hover:from-[var(--primary)] hover:to-[var(--primary-light)] hover:text-white transition-all rounded-lg font-medium text-sm"
+                              style={{ animationDelay: `${index * 30}ms` }}
+                            >
+                              {subItem.label}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}
