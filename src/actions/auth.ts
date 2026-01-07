@@ -30,8 +30,7 @@ export async function login(formData: FormData) {
     const handle = formData.get('handle')
     const password = formData.get('password')
 
-    // Simple hardcoded credentials for now
-    if (handle === 'admin' && password === 'admin123') {
+    if (handle === process.env.ADMIN_HANDLE && password === process.env.ADMIN_PASSWORD) {
         // Create the session
         const expires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 1 day
         const session = await encrypt({ user: 'admin', expires })
