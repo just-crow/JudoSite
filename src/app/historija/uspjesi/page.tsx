@@ -12,7 +12,7 @@ export default function UspjesiPage() {
         <div className="section">
             <div className="container">
                 <div className="text-center mb-16 animate-fade-in-up">
-                    <h1 className="text-4xl font-bold text-white mb-4">Uspjesi i Medalje</h1>
+                    <h1 className="text-4xl font-bold text-[var(--secondary)] mb-4">Uspjesi i Medalje</h1>
                     <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
                         Kontinuitet vrhunskih rezultata na domaćoj i međunarodnoj sceni dokaz je našeg kvalitetnog rada.
                     </p>

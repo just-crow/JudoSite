@@ -62,7 +62,7 @@ export default function HistorijaPage() {
                         <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
                             Više od 70 godina tradicije
                         </h1>
-                        <p className="text-xl text-[var(--text-secondary)]">
+                        <p className="text-xl text-white">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Od skromnih početaka 1952. godine do danas, naš klub je postao sinonim za judo izvrsnost.
                         </p>
                     </div>
@@ -86,7 +86,7 @@ export default function HistorijaPage() {
             {/* Timeline */}
             <section className="section pt-0">
                 <div className="container">
-                    <h2 className="text-3xl font-bold text-white mb-12 text-center">Naša priča</h2>
+                    <h2 className="text-3xl font-bold text-[var(--secondary)] mb-12 text-center">Naša priča</h2>
                     <div className="relative">
                         {/* Timeline line */}
                         <div className="absolute left-4 lg:left-1/2 top-0 bottom-0 w-0.5 bg-[var(--border)] transform lg:-translate-x-1/2"></div>
@@ -105,7 +105,7 @@ export default function HistorijaPage() {
                                 {/* Content */}
                                 <div className={`lg:w-1/2 ml-16 lg:ml-0 ${index % 2 === 0 ? "lg:pr-16 lg:text-right" : "lg:pl-16"}`}>
                                     <span className="text-[var(--secondary)] font-bold text-xl">{event.year}</span>
-                                    <h3 className="text-xl font-bold text-white mt-2 mb-3">{event.title}</h3>
+                                    <h3 className="text-xl font-bold text-black mt-2 mb-3">{event.title}</h3>
                                     <p className="text-[var(--text-secondary)]">{event.description}</p>
                                 </div>
 
@@ -120,7 +120,7 @@ export default function HistorijaPage() {
             {/* Notable Alumni */}
             <section className="section">
                 <div className="container">
-                    <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
+                    <h2 className="text-3xl font-bold text-[var(--secondary)] mb-8 flex items-center gap-3">
                         <span className="w-1 h-8 bg-[var(--secondary)] rounded-full"></span>
                         Poznati bivši članovi
                     </h2>

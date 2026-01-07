@@ -45,7 +45,7 @@ export default async function Home() {
       {/* Stats Section with subtle pattern background */}
       <section className="relative py-20 bg-[var(--surface)] overflow-hidden">
         {/* Decorative background elements */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none"
+        <div className="absolute top-0 left-0 w-full h-full opacity-[40%] pointer-events-none bg-[#18488f]"
           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--text-muted) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
 
         <div className="container relative z-10">
@@ -223,9 +223,6 @@ export default async function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/kontakt" className="px-8 py-4 bg-white text-[var(--primary-dark)] rounded-xl font-bold hover:bg-gray-100 transition-colors shadow-lg hover:shadow-xl hover:-translate-y-1 transform duration-300">
               Kontaktirajte Nas
-            </Link>
-            <Link href="/akademija/upis" className="px-8 py-4 bg-[var(--primary-dark)] text-white rounded-xl font-bold hover:bg-opacity-80 transition-colors shadow-lg border border-white/20">
-              Informacije o Upisu
             </Link>
           </div>
         </div>
