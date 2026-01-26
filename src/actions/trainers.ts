@@ -12,8 +12,6 @@ export interface Trainer {
     role: string
     rank: string
     image: string
-    bio: string
-    email: string
     phone: string
 }
 
@@ -31,8 +29,6 @@ export async function getTrainers(): Promise<Trainer[]> {
         role: item.role,
         rank: item.rank,
         image: item.image,
-        bio: item.bio,
-        email: item.email,
         phone: item.phone
     }))
 }
@@ -43,8 +39,6 @@ export async function createTrainer(formData: FormData) {
     const name = formData.get('name') as string
     const role = formData.get('role') as string
     const rank = formData.get('rank') as string
-    const bio = formData.get('bio') as string
-    const email = formData.get('email') as string
     const phone = formData.get('phone') as string
 
     // Split name
@@ -66,7 +60,7 @@ export async function createTrainer(formData: FormData) {
     const newItem = {
         first_name: firstName,
         last_name: lastName,
-        role, rank, bio, email, phone, image
+        role, rank, phone, image
     }
 
     const { error } = await supabase.from('trainers').insert(newItem)
@@ -96,8 +90,6 @@ export async function getTrainer(id: string) {
         role: data.role,
         rank: data.rank,
         image: data.image,
-        bio: data.bio,
-        email: data.email,
         phone: data.phone
     }
 }
@@ -108,8 +100,6 @@ export async function updateTrainer(id: string, formData: FormData) {
     const name = formData.get('name') as string
     const role = formData.get('role') as string
     const rank = formData.get('rank') as string
-    const bio = formData.get('bio') as string
-    const email = formData.get('email') as string
     const phone = formData.get('phone') as string
 
     // Split name
@@ -131,7 +121,7 @@ export async function updateTrainer(id: string, formData: FormData) {
     const updateData: any = {
         first_name: firstName,
         last_name: lastName,
-        role, rank, bio, email, phone
+        role, rank, phone
     }
 
     if (image) {

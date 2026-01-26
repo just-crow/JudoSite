@@ -3,26 +3,10 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "O klubu | Judo Klub Željezničar",
-    description: "Saznajte više o Judo Klubu Željezničar - historija, rukovodstvo, dojo i kontakt informacije.",
+    description: "Saznajte više o Judo Klubu Željezničar - historija, dojo i kontakt informacije.",
 };
 
-const leadership = [
-    {
-        name: "Sanin Mirvić",
-        role: "Predsjednik kluba",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-    {
-        name: "Amina Hadžić",
-        role: "Potpredsjednica",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-    {
-        name: "Edin Bašić",
-        role: "Generalni sekretar",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-];
+
 
 export default function KlubPage() {
     return (
@@ -60,39 +44,12 @@ export default function KlubPage() {
                             </p>
                         </div>
                         <div className="relative h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-[var(--surface)] to-[var(--surface-light)]">
-                            <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                                <svg className="w-32 h-32 text-[var(--secondary)]" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-                                </svg>
-                            </div>
-                            <div className="absolute bottom-4 left-4 right-4 text-center text-[var(--text-muted)] text-sm">
-                                [Placeholder za sliku kluba]
-                            </div>
+                            <img
+                                src="/images/486677264_620710237636162_8126068584696942124_n.jpg"
+                                alt="Judo Klub Željezničar"
+                                className="w-full h-full object-cover"
+                            />
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Leadership */}
-            <section className="section pt-0">
-                <div className="container">
-                    <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                        <span className="w-1 h-8 bg-[var(--secondary)] rounded-full"></span>
-                        Rukovodstvo
-                    </h2>
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {leadership.map((person, index) => (
-                            <div key={index} className="card p-6 text-center">
-                                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[var(--secondary)] to-[var(--secondary-light)] flex items-center justify-center">
-                                    <span className="text-2xl font-bold text-[var(--primary-dark)]">
-                                        {person.name.split(' ').map(n => n[0]).join('')}
-                                    </span>
-                                </div>
-                                <h3 className="text-lg font-bold text-white">{person.name}</h3>
-                                <p className="text-[var(--secondary)] font-medium text-sm mb-2">{person.role}</p>
-                                <p className="text-[var(--text-secondary)] text-sm">{person.description}</p>
-                            </div>
-                        ))}
                     </div>
                 </div>
             </section>

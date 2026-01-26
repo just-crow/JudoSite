@@ -26,26 +26,26 @@ export default async function TreneriPage() {
                 <div className="container">
                     <div className="space-y-12">
                         {trainers.map((trainer, index) => (
-                            <div key={trainer.id} className="group relative bg-white rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-[var(--border)]">
+                            <div key={trainer.id} className="group relative bg-white rounded-[32px] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-[var(--border)] h-fit">
                                 <div className="grid lg:grid-cols-12 gap-0">
                                     {/* Image Side */}
-                                    <div className={`lg:col-span-4 relative h-80 lg:h-auto ${index % 2 === 1 ? 'lg:order-last' : ''}`}>
+                                    {/* Image Side */}
+                                    <div className={`lg:col-span-3 relative ${index % 2 === 1 ? 'lg:order-last' : ''}`}>
                                         {trainer.image ? (
                                             <img
                                                 src={trainer.image}
                                                 alt={trainer.name}
-                                                className="absolute inset-0 w-full h-full object-cover"
+                                                className="w-full min-h-full object-cover"
                                             />
                                         ) : (
-                                            <div className="absolute inset-0 bg-gradient-to-br from-[var(--background-alt)] to-[var(--border)] flex items-center justify-center">
+                                            <div className="w-full h-80 bg-gradient-to-br from-[var(--background-alt)] to-[var(--border)] flex items-center justify-center">
                                                 <span className="text-6xl">🥋</span>
                                             </div>
                                         )}
-                                        {/* Overlay for contrast on mobile if needed, or style */}
                                     </div>
 
                                     {/* Content Side */}
-                                    <div className="lg:col-span-8 p-8 lg:p-12 flex flex-col justify-center">
+                                    <div className="lg:col-span-9 p-8 lg:p-12 flex flex-col justify-center">
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                                             <div>
                                                 <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--primary)] transition-colors">
@@ -59,19 +59,7 @@ export default async function TreneriPage() {
                                             </div>
                                         </div>
 
-                                        <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-8">
-                                            {trainer.bio || "Nema biografije."}
-                                        </p>
-
-                                        <div className="grid sm:grid-cols-2 gap-4 mt-auto">
-                                            {trainer.email && (
-                                                <div className="flex items-center gap-3 p-4 rounded-xl bg-[var(--background-alt)] hover:bg-[var(--primary)] hover:text-white transition-colors group/item">
-                                                    <svg className="w-5 h-5 text-[var(--text-muted)] group-hover/item:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                    </svg>
-                                                    <span className="font-medium text-sm truncate">{trainer.email}</span>
-                                                </div>
-                                            )}
+                                        <div className="mt-auto">
                                             {trainer.phone && (
                                                 <div className="flex items-center gap-3 p-4 rounded-xl bg-[var(--background-alt)] hover:bg-[var(--primary)] hover:text-white transition-colors group/item">
                                                     <svg className="w-5 h-5 text-[var(--text-muted)] group-hover/item:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

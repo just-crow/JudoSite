@@ -38,8 +38,8 @@ const timeline = [
     },
     {
         year: "2024",
-        title: "Novo rukovodstvo",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Izabrano je novo rukovodstvo sa ambicioznim planovima za budućnost.",
+        title: "Kontinuirani uspjeh",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Klub nastavlja sa nizanjem uspjeha na domaćoj i međunarodnoj sceni.",
     },
 ];
 

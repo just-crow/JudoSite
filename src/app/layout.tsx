@@ -10,14 +10,25 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://judoklubzeljeznicar.ba'),
   title: "Judo Klub Željezničar | Zvanična internet stranica",
   description: "Zvanična internet stranica Judo Kluba Željezničar. Od 1952. godine razvijamo judo kulturu i sportsku izvrsnost.",
-  keywords: "judo, sarajevo, klub, željezničar, borilačke vještine, sport, djeca, takmičenja",
+  keywords: ["judo", "sarajevo", "klub", "željezničar", "borilačke vještine", "sport", "djeca", "takmičenja"],
+  authors: [{ name: 'Judo Klub Željezničar' }],
+  publisher: 'Judo Klub Željezničar',
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "Judo Klub Željezničar",
     description: "Zvanična internet stranica Judo Kluba Željezničar",
     type: "website",
     locale: "bs_BA",
+    siteName: "Judo Klub Željezničar",
   },
 };
 

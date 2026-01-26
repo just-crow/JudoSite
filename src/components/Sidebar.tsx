@@ -82,7 +82,7 @@ export default async function Sidebar() {
                                 title={sponsor.name}
                             >
                                 {sponsor.logo ? (
-                                    <img src={sponsor.logo} alt={sponsor.name} className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all" />
+                                    <img src={sponsor.logo} alt={sponsor.name} className="max-w-full max-h-full object-contain transition-all group-hover:scale-110" />
                                 ) : (
                                     <span className="text-xs font-bold text-[var(--text-muted)] group-hover:text-[var(--primary)] transition-colors text-center">{sponsor.name}</span>
                                 )}

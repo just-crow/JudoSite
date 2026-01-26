@@ -9,6 +9,9 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: "Judo Klub Željezničar | Početna",
   description: "Dobrodošli na službenu stranicu Judo Kluba Željezničar. Mjesto gdje se rađaju šampioni.",
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export default async function Home() {
@@ -183,8 +186,8 @@ export default async function Home() {
                 <div className="absolute inset-0 bg-gradient-to-tr from-[var(--primary)]/20 to-transparent z-10 group-hover:opacity-0 transition-opacity duration-500" />
                 {/* Replace with actual club photo or high quality placeholder */}
                 <img
-                  src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=1000&auto=format&fit=crop"
-                  alt="Judo trening"
+                  src="/images/486677264_620710237636162_8126068584696942124_n.jpg"
+                  alt="Judo Klub Željezničar Tim"
                   className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
                 />
               </div>

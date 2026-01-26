@@ -38,7 +38,7 @@ export default async function SponzoriPage() {
                                     <img
                                         src={sponsor.logo}
                                         alt={sponsor.name}
-                                        className="h-24 w-auto object-contain mb-6 filter grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110"
+                                        className="h-24 w-auto object-contain mb-6 transition-all duration-500 transform group-hover:scale-110"
                                     />
                                 ) : (
                                     <div className="h-24 w-24 rounded-full bg-[var(--background)] flex items-center justify-center mb-6">

@@ -10,7 +10,7 @@ const footerLinks = {
     klub: [
         { label: 'O klubu', href: '/klub' },
         { label: 'Historija', href: '/historija' },
-        { label: 'Rukovodstvo', href: '/klub/rukovodstvo' },
+
         { label: 'Dojo', href: '/klub/dojo' },
     ],
     takmicari: [
@@ -124,11 +124,11 @@ export default async function Footer() {
                                     href={sponsor.website}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group opacity-40 hover:opacity-100 transition-opacity duration-300"
+                                    className="group transition-transform duration-300 hover:scale-110"
                                     title={sponsor.name}
                                 >
                                     {sponsor.logo ? (
-                                        <img src={sponsor.logo} alt={sponsor.name} className="h-10 w-auto object-contain filter grayscale group-hover:grayscale-0 transition-all" />
+                                        <img src={sponsor.logo} alt={sponsor.name} className="h-10 w-auto object-contain transition-all" />
                                     ) : (
                                         <span className="text-sm font-bold text-white group-hover:text-[var(--accent)] transition-colors">{sponsor.name}</span>
                                     )}

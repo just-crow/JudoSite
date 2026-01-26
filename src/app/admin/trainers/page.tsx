@@ -44,10 +44,7 @@ export default async function AdminTrainersPage() {
                                     </td>
                                     <td className="p-6 text-[var(--text-secondary)]">{item.role}</td>
                                     <td className="p-6 text-[var(--text-secondary)]">{item.rank}</td>
-                                    <td className="p-6 text-[var(--text-secondary)] text-sm">
-                                        <div>{item.email}</div>
-                                        <div>{item.phone}</div>
-                                    </td>
+                                    <td className="p-6 text-[var(--text-secondary)] text-sm">{item.phone}</td>
                                     <td className="p-6 text-right">
                                         <div className="flex items-center justify-end gap-2">
                                             <Link href={`/admin/trainers/${item.id}/edit`} className="text-[var(--primary)] hover:text-[var(--primary-dark)] font-medium transition-colors p-2 hover:bg-blue-50 rounded-lg">

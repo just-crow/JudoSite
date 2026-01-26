@@ -18,7 +18,7 @@ const menuItems = [
     href: '/klub',
     submenu: [
       { label: 'O klubu', href: '/klub' },
-      { label: 'Rukovodstvo', href: '/klub/rukovodstvo' },
+
       { label: 'Dojo', href: '/klub/dojo' },
       { label: 'Sponzori', href: '/klub/sponzori' },
       { label: 'Kontakt', href: '/kontakt' },
@@ -92,7 +92,7 @@ export default function Header() {
           <div className="flex items-center justify-between py-5">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-4 group">
-              <img className="w-14 h-14 bg-gradient-to-br from-[var(--primary)] to-[var(--primary-light)] rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-105" src="/ZeljeznicarIcon.png" />
+              <img className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-105" src="/ZeljeznicarIcon.png" />
               <div className="hidden sm:block">
                 <h1 className="text-2xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors tracking-tight">
                   Judo Klub

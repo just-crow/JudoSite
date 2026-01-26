@@ -1,12 +1,24 @@
-'use client';
+'use client'
 
-import { createTrainer } from "@/actions/trainers";
+import { updateTrainer } from "@/actions/trainers";
 import Link from "next/link";
 import { useState } from "react";
 import ImageCropper from "@/components/ImageCropper";
 
-export default function AddTrainerPage() {
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
+interface EditTrainerFormProps {
+    trainer: {
+        id: string;
+        name: string;
+        role: string;
+        rank: string;
+        image: string;
+        phone: string;
+    };
+    trainerId: string;
+}
+
+export default function EditTrainerForm({ trainer, trainerId }: EditTrainerFormProps) {
+    const [imagePreview, setImagePreview] = useState<string | null>(trainer.image || null);
     const [croppedFile, setCroppedFile] = useState<File | null>(null);
     const [showCropper, setShowCropper] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -24,23 +36,22 @@ export default function AddTrainerPage() {
     };
 
     const handleCropComplete = (croppedBlob: Blob) => {
-        // Convert blob to File
         const file = new File([croppedBlob], 'cropped-image.jpg', { type: 'image/jpeg' });
         setCroppedFile(file);
 
-        // Create preview URL
         const previewUrl = URL.createObjectURL(croppedBlob);
         setImagePreview(previewUrl);
 
         setShowCropper(false);
     };
 
+    const updateWithId = updateTrainer.bind(null, trainerId);
+
     const handleSubmit = async (formData: FormData) => {
-        // Replace the file input with our cropped file
         if (croppedFile) {
             formData.set('file', croppedFile);
         }
-        await createTrainer(formData);
+        await updateWithId(formData);
     };
 
     return (
@@ -64,8 +75,8 @@ export default function AddTrainerPage() {
                     </svg>
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-bold text-[var(--text-primary)]">Dodaj Trenera</h1>
-                    <p className="text-[var(--text-secondary)]">Unesite podatke o novom treneru</p>
+                    <h1 className="text-2xl font-bold text-[var(--text-primary)]">Uredi Trenera</h1>
+                    <p className="text-[var(--text-secondary)]">Izmjena podataka za: {trainer.name}</p>
                 </div>
             </div>
 
@@ -75,7 +86,13 @@ export default function AddTrainerPage() {
                         <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                             Ime i Prezime
                         </label>
-                        <input name="name" type="text" required className="w-full px-4 py-2 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text-primary)]" />
+                        <input
+                            name="name"
+                            type="text"
+                            required
+                            defaultValue={trainer.name}
+                            className="w-full px-4 py-2 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text-primary)]"
+                        />
                     </div>
 
                     <div className="grid grid-cols-2 gap-6">
@@ -83,13 +100,25 @@ export default function AddTrainerPage() {
                             <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                                 Uloga
                             </label>
-                            <input name="role" type="text" required className="w-full px-4 py-2 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text-primary)]" placeholder="npr. Glavni trener" />
+                            <input
+                                name="role"
+                                type="text"
+                                required
+                                defaultValue={trainer.role}
+                                className="w-full px-4 py-2 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text-primary)]"
+                            />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                                 Rank
                             </label>
-                            <input name="rank" type="text" required className="w-full px-4 py-2 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text-primary)]" placeholder="npr. 5. Dan" />
+                            <input
+                                name="rank"
+                                type="text"
+                                required
+                                defaultValue={trainer.rank}
+                                className="w-full px-4 py-2 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text-primary)]"
+                            />
                         </div>
                     </div>
 
@@ -97,12 +126,17 @@ export default function AddTrainerPage() {
                         <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
                             Telefon
                         </label>
-                        <input name="phone" type="text" className="w-full px-4 py-2 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text-primary)]" />
+                        <input
+                            name="phone"
+                            type="text"
+                            defaultValue={trainer.phone}
+                            className="w-full px-4 py-2 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-[var(--text-primary)]"
+                        />
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
-                            Fotografija
+                            Nova Fotografija (opcionalno)
                         </label>
                         <div className="border-2 border-dashed border-[var(--border)] rounded-xl p-8 text-center hover:border-[var(--primary)] transition-colors bg-[var(--background-alt)]">
                             <input
@@ -124,7 +158,7 @@ export default function AddTrainerPage() {
                                         <svg className="w-12 h-12 mx-auto text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
-                                        <p className="text-[var(--text-secondary)]">Click to upload image</p>
+                                        <p className="text-[var(--text-secondary)]">Click to upload new image</p>
                                         <p className="text-xs text-[var(--text-muted)]">You'll be able to crop the image before uploading</p>
                                     </div>
                                 )}
@@ -135,7 +169,7 @@ export default function AddTrainerPage() {
 
                 <div className="flex justify-end gap-4">
                     <Link href="/admin/trainers" className="px-6 py-2 text-[var(--text-secondary)] hover:bg-gray-100 rounded-lg transition-colors font-medium">Odustani</Link>
-                    <button type="submit" className="btn-primary">Sačuvaj</button>
+                    <button type="submit" className="btn-primary">Sačuvaj Izmjene</button>
                 </div>
             </form>
         </div>
