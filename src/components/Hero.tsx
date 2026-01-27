@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { NewsItem } from '@/actions/news';
 
 interface HeroProps {
@@ -19,8 +20,8 @@ export default function Hero({ featuredNews }: HeroProps) {
     const subArticles = featuredNews.slice(1, 3);
 
     // Helper to get consistent values
-    const getMainImage = (n: any) => n.image || defaultFeatured.image;
-    const getMainLink = (n: any) => n.id === 'default-1' ? '/novosti' : `/novosti/${n.id}`;
+    const getMainImage = (n: NewsItem | typeof defaultFeatured) => n.image || defaultFeatured.image;
+    const getMainLink = (n: NewsItem | typeof defaultFeatured) => n.id === 'default-1' ? '/novosti' : `/novosti/${n.id}`;
 
     return (
         <section className="py-20 lg:py-24 bg-gradient-to-b from-[var(--background-alt)] to-[var(--background)] relative overflow-hidden">
@@ -37,10 +38,12 @@ export default function Hero({ featuredNews }: HeroProps) {
                             {/* Image Container */}
                             <div className="absolute inset-0">
                                 {getMainImage(mainArticle) ? (
-                                    <img
+                                    <Image
                                         src={getMainImage(mainArticle)}
                                         alt={mainArticle.title}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                        priority
                                     />
                                 ) : (
                                     <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -80,17 +83,18 @@ export default function Hero({ featuredNews }: HeroProps) {
 
                     {/* Secondary articles */}
                     <div className="flex flex-col gap-6 lg:gap-8">
-                        {subArticles.length > 0 ? subArticles.map((article, index) => (
+                        {subArticles.length > 0 ? subArticles.map((article) => (
                             <Link
                                 key={article.id}
                                 href={`/novosti/${article.id}`}
                                 className="group relative rounded-[28px] overflow-hidden h-[240px] lg:h-[290px] flex-1 shadow-xl hover:shadow-2xl transition-all duration-700"
                             >
                                 <div className="absolute inset-0">
-                                    <img
+                                    <Image
                                         src={article.image || defaultFeatured.image}
                                         alt={article.title}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                                     />
                                 </div>
 

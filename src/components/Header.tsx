@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { getSession } from '@/actions/auth';
+import Image from 'next/image';
 
 const menuItems = [
   {
@@ -92,7 +93,14 @@ export default function Header() {
           <div className="flex items-center justify-between py-5">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-4 group">
-              <img className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-105" src="/ZeljeznicarIcon.png" />
+              <div className="relative w-14 h-14 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-105">
+                <Image
+                  src="/ZeljeznicarIcon.png"
+                  alt="Judo Klub Željezničar Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
               <div className="hidden sm:block">
                 <h1 className="text-2xl font-bold text-[var(--text-primary)] group-hover:text-[var(--primary)] transition-colors tracking-tight">
                   Judo Klub

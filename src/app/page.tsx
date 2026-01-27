@@ -1,6 +1,6 @@
 import Hero from "@/components/Hero";
 import NewsCard from "@/components/NewsCard";
-import Footer from "@/components/Footer";
+import Image from "next/image";
 import CompetitionsPreview from "@/components/CompetitionsPreview";
 import { getNews } from "@/actions/news";
 import Link from "next/link";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const allNews = await getNews();
+  const allNews = await getNews(10);
 
   // Logic: 
   // 1. Prioritize Featured News
@@ -185,10 +185,11 @@ export default async function Home() {
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl relative group">
                 <div className="absolute inset-0 bg-gradient-to-tr from-[var(--primary)]/20 to-transparent z-10 group-hover:opacity-0 transition-opacity duration-500" />
                 {/* Replace with actual club photo or high quality placeholder */}
-                <img
+                <Image
                   src="/images/486677264_620710237636162_8126068584696942124_n.jpg"
                   alt="Judo Klub Željezničar Tim"
-                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                  fill
+                  className="object-cover transform transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
               {/* Floating badge */}
