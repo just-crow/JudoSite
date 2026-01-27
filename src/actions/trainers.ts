@@ -5,6 +5,12 @@ import { verifySession } from './auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { uploadFile } from './file-upload'
+import {
+    isValidUUID,
+    validateTrainerInput,
+    sanitizeString
+} from '@/lib/validation'
+import { unstable_cache } from 'next/cache'
 
 export interface Trainer {
     id: string
@@ -15,31 +21,71 @@ export interface Trainer {
     phone: string
 }
 
-export async function getTrainers(): Promise<Trainer[]> {
-    const { data, error } = await supabase
-        .from('trainers')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-    if (error || !data) return []
-
-    return data.map((item: any) => ({
-        id: item.id,
-        name: `${item.first_name} ${item.last_name}`,
-        role: item.role,
-        rank: item.rank,
-        image: item.image,
-        phone: item.phone
-    }))
+// Supabase row type
+interface TrainerRow {
+    id: string
+    first_name: string
+    last_name: string
+    role: string | null
+    rank: string | null
+    image: string | null
+    phone: string | null
 }
 
-export async function createTrainer(formData: FormData) {
+/**
+ * Maps a database row to Trainer interface
+ */
+function mapRowToTrainer(row: TrainerRow): Trainer {
+    return {
+        id: row.id,
+        name: `${row.first_name} ${row.last_name}`.trim(),
+        role: row.role || '',
+        rank: row.rank || '',
+        image: row.image || '',
+        phone: row.phone || ''
+    }
+}
+
+/**
+ * Gets all trainers with caching
+ */
+export const getTrainers = unstable_cache(
+    async (): Promise<Trainer[]> => {
+        const { data, error } = await supabase
+            .from('trainers')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+        if (error || !data) {
+            if (process.env.NODE_ENV === 'development' && error) {
+                console.error("Error fetching trainers:", error.message)
+            }
+            return []
+        }
+
+        return (data as TrainerRow[]).map(mapRowToTrainer)
+    },
+    ['trainers'],
+    { revalidate: 300, tags: ['trainers'] }
+)
+
+/**
+ * Creates a new trainer (admin only)
+ */
+export async function createTrainer(formData: FormData): Promise<void> {
     await verifySession()
 
-    const name = formData.get('name') as string
-    const role = formData.get('role') as string
-    const rank = formData.get('rank') as string
-    const phone = formData.get('phone') as string
+    const name = sanitizeString(formData.get('name') as string || '')
+    const role = sanitizeString(formData.get('role') as string || '')
+    const rank = sanitizeString(formData.get('rank') as string || '')
+    const phone = sanitizeString(formData.get('phone') as string || '')
+
+    // Validate input
+    const validation = validateTrainerInput({ name, role })
+    if (!validation.valid) {
+        console.error('Validation failed:', validation.error)
+        return
+    }
 
     // Split name
     const nameParts = name.trim().split(' ')
@@ -53,20 +99,27 @@ export async function createTrainer(formData: FormData) {
         try {
             image = await uploadFile(formData)
         } catch (e) {
-            console.error("Upload failed", e)
+            if (process.env.NODE_ENV === 'development') {
+                console.error("Upload failed", e)
+            }
         }
     }
 
     const newItem = {
         first_name: firstName,
         last_name: lastName,
-        role, rank, phone, image
+        role,
+        rank,
+        phone,
+        image
     }
 
     const { error } = await supabase.from('trainers').insert(newItem)
 
     if (error) {
-        console.error("Error creating trainer", error)
+        if (process.env.NODE_ENV === 'development') {
+            console.error("Error creating trainer:", error.message)
+        }
         return
     }
 
@@ -75,7 +128,15 @@ export async function createTrainer(formData: FormData) {
     redirect('/admin/trainers')
 }
 
-export async function getTrainer(id: string) {
+/**
+ * Gets a single trainer by ID
+ */
+export async function getTrainer(id: string): Promise<Trainer | undefined> {
+    // Validate UUID format
+    if (!isValidUUID(id)) {
+        return undefined
+    }
+
     const { data, error } = await supabase
         .from('trainers')
         .select('*')
@@ -84,23 +145,32 @@ export async function getTrainer(id: string) {
 
     if (error || !data) return undefined
 
-    return {
-        id: data.id,
-        name: `${data.first_name} ${data.last_name}`,
-        role: data.role,
-        rank: data.rank,
-        image: data.image,
-        phone: data.phone
-    }
+    return mapRowToTrainer(data as TrainerRow)
 }
 
-export async function updateTrainer(id: string, formData: FormData) {
+/**
+ * Updates an existing trainer (admin only)
+ */
+export async function updateTrainer(id: string, formData: FormData): Promise<void> {
     await verifySession()
 
-    const name = formData.get('name') as string
-    const role = formData.get('role') as string
-    const rank = formData.get('rank') as string
-    const phone = formData.get('phone') as string
+    // Validate UUID format
+    if (!isValidUUID(id)) {
+        console.error('Invalid trainer ID format')
+        return
+    }
+
+    const name = sanitizeString(formData.get('name') as string || '')
+    const role = sanitizeString(formData.get('role') as string || '')
+    const rank = sanitizeString(formData.get('rank') as string || '')
+    const phone = sanitizeString(formData.get('phone') as string || '')
+
+    // Validate input
+    const validation = validateTrainerInput({ name, role })
+    if (!validation.valid) {
+        console.error('Validation failed:', validation.error)
+        return
+    }
 
     // Split name
     const nameParts = name.trim().split(' ')
@@ -114,14 +184,25 @@ export async function updateTrainer(id: string, formData: FormData) {
         try {
             image = await uploadFile(formData)
         } catch (e) {
-            console.error("Upload failed", e)
+            if (process.env.NODE_ENV === 'development') {
+                console.error("Upload failed", e)
+            }
         }
     }
 
-    const updateData: any = {
+    const updateData: {
+        first_name: string
+        last_name: string
+        role: string
+        rank: string
+        phone: string
+        image?: string
+    } = {
         first_name: firstName,
         last_name: lastName,
-        role, rank, phone
+        role,
+        rank,
+        phone
     }
 
     if (image) {
@@ -134,7 +215,9 @@ export async function updateTrainer(id: string, formData: FormData) {
         .eq('id', id)
 
     if (error) {
-        console.error("Error updating trainer", error)
+        if (process.env.NODE_ENV === 'development') {
+            console.error("Error updating trainer:", error.message)
+        }
         return
     }
 
@@ -143,10 +226,26 @@ export async function updateTrainer(id: string, formData: FormData) {
     redirect('/admin/trainers')
 }
 
-export async function deleteTrainer(id: string) {
+/**
+ * Deletes a trainer (admin only)
+ */
+export async function deleteTrainer(id: string): Promise<void> {
     await verifySession()
 
-    await supabase.from('trainers').delete().eq('id', id)
+    // Validate UUID format
+    if (!isValidUUID(id)) {
+        console.error('Invalid trainer ID format')
+        return
+    }
+
+    const { error } = await supabase.from('trainers').delete().eq('id', id)
+
+    if (error) {
+        if (process.env.NODE_ENV === 'development') {
+            console.error("Error deleting trainer:", error.message)
+        }
+        return
+    }
 
     revalidatePath('/treneri')
     revalidatePath('/admin/trainers')

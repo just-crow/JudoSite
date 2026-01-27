@@ -1,6 +1,7 @@
 
 import { getCompetitions } from "@/actions/competitions";
 import { Metadata } from 'next';
+import { partitionByDate, sortByDateAscending, formatCalendarDate, formatShortDate } from '@/utils/date-utils';
 
 export const metadata: Metadata = {
     title: "Kalendar Takmičenja | Judo Klub Željezničar",
@@ -10,17 +11,11 @@ export const metadata: Metadata = {
 export default async function CalendarPage() {
     const competitions = await getCompetitions();
 
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
+    // Partition competitions into upcoming and past using optimized utility
+    const { upcoming: upcomingRaw, past } = partitionByDate(competitions);
 
-    // Upcoming: Ascending (Nearest date first)
-    const upcoming = competitions
-        .filter(c => new Date(c.date) >= now)
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-    // Past: Descending (Most recent past date first) - getCompetitions returns DESC by default
-    const past = competitions
-        .filter(c => new Date(c.date) < now);
+    // Sort upcoming by nearest date first
+    const upcoming = sortByDateAscending(upcomingRaw);
 
     return (
         <div className="min-h-screen bg-[var(--background)]">
@@ -47,58 +42,63 @@ export default async function CalendarPage() {
 
                         {upcoming.length > 0 ? (
                             <div className="space-y-6">
-                                {upcoming.map((comp) => (
-                                    <div key={comp.id} className="card p-6 md:p-8 flex flex-col md:flex-row gap-6 md:items-center hover:border-[var(--primary)] transition-colors group animate-fade-in-up">
-                                        {/* Date Box */}
-                                        <div className="flex-shrink-0 flex flex-row md:flex-col items-center justify-center md:w-24 md:h-24 bg-[var(--background-alt)] rounded-2xl border border-[var(--border)] p-4 md:p-0 gap-3 md:gap-0">
-                                            <span className="text-3xl font-bold text-[var(--primary)]">
-                                                {new Date(comp.date).getDate()}
-                                            </span>
-                                            <span className="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">
-                                                {new Date(comp.date).toLocaleDateString('bs-BA', { month: 'short' })}
-                                            </span>
-                                            <span className="md:hidden text-sm font-bold text-[var(--text-muted)]">
-                                                {new Date(comp.date).getFullYear()}
-                                            </span>
-                                        </div>
+                                {upcoming.map((comp) => {
+                                    // Parse date once per competition
+                                    const dateInfo = formatCalendarDate(comp.date);
 
-                                        {/* Content */}
-                                        <div className="flex-grow">
-                                            <div className="flex flex-wrap items-center gap-3 mb-2">
-                                                <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
-                                                    Nadolazeće
+                                    return (
+                                        <div key={comp.id} className="card p-6 md:p-8 flex flex-col md:flex-row gap-6 md:items-center hover:border-[var(--primary)] transition-colors group animate-fade-in-up">
+                                            {/* Date Box */}
+                                            <div className="flex-shrink-0 flex flex-row md:flex-col items-center justify-center md:w-24 md:h-24 bg-[var(--background-alt)] rounded-2xl border border-[var(--border)] p-4 md:p-0 gap-3 md:gap-0">
+                                                <span className="text-3xl font-bold text-[var(--primary)]">
+                                                    {dateInfo.day}
                                                 </span>
-                                                <span className="flex items-center gap-1 text-sm text-[var(--text-secondary)] font-medium">
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    </svg>
-                                                    {comp.location}
+                                                <span className="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider">
+                                                    {dateInfo.month}
+                                                </span>
+                                                <span className="md:hidden text-sm font-bold text-[var(--text-muted)]">
+                                                    {dateInfo.year}
                                                 </span>
                                             </div>
-                                            <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--primary)] transition-colors">
-                                                {comp.title}
-                                            </h3>
-                                            <p className="text-[var(--text-secondary)] mb-4 md:mb-0">
-                                                {comp.description}
-                                            </p>
-                                        </div>
 
-                                        {/* Action */}
-                                        {comp.registrationLink && (
-                                            <div className="flex-shrink-0">
-                                                <a
-                                                    href={comp.registrationLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="btn-primary w-full md:w-auto text-sm"
-                                                >
-                                                    Prijava
-                                                </a>
+                                            {/* Content */}
+                                            <div className="flex-grow">
+                                                <div className="flex flex-wrap items-center gap-3 mb-2">
+                                                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+                                                        Nadolazeće
+                                                    </span>
+                                                    <span className="flex items-center gap-1 text-sm text-[var(--text-secondary)] font-medium">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        </svg>
+                                                        {comp.location}
+                                                    </span>
+                                                </div>
+                                                <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--primary)] transition-colors">
+                                                    {comp.title}
+                                                </h3>
+                                                <p className="text-[var(--text-secondary)] mb-4 md:mb-0">
+                                                    {comp.description}
+                                                </p>
                                             </div>
-                                        )}
-                                    </div>
-                                ))}
+
+                                            {/* Action */}
+                                            {comp.registrationLink && (
+                                                <div className="flex-shrink-0">
+                                                    <a
+                                                        href={comp.registrationLink}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="btn-primary w-full md:w-auto text-sm"
+                                                    >
+                                                        Prijava
+                                                    </a>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         ) : (
                             <div className="p-12 text-center bg-[var(--surface)] border-2 border-dashed border-[var(--border)] rounded-2xl">
@@ -118,27 +118,33 @@ export default async function CalendarPage() {
                             </h2>
 
                             <div className="space-y-6 opacity-70 hover:opacity-100 transition-opacity duration-300">
-                                {past.map((comp) => (
-                                    <div key={comp.id} className="card p-6 flex flex-col md:flex-row gap-6 md:items-center bg-[var(--background-alt)]">
-                                        <div className="flex-shrink-0 w-16 text-center md:text-left">
-                                            <div className="text-sm font-bold text-[var(--text-muted)]">
-                                                {new Date(comp.date).toLocaleDateString('bs-BA', { day: 'numeric', month: 'short' })}
-                                            </div>
-                                            <div className="text-xs text-[var(--text-muted)]">
-                                                {new Date(comp.date).getFullYear()}
-                                            </div>
-                                        </div>
+                                {past.map((comp) => {
+                                    // Parse date once per competition
+                                    const shortDate = formatShortDate(comp.date);
+                                    const year = new Date(comp.date).getFullYear();
 
-                                        <div className="flex-grow">
-                                            <h3 className="text-lg font-bold text-[var(--text-secondary)] mb-1">
-                                                {comp.title}
-                                            </h3>
-                                            <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
-                                                <span>{comp.location}</span>
+                                    return (
+                                        <div key={comp.id} className="card p-6 flex flex-col md:flex-row gap-6 md:items-center bg-[var(--background-alt)]">
+                                            <div className="flex-shrink-0 w-16 text-center md:text-left">
+                                                <div className="text-sm font-bold text-[var(--text-muted)]">
+                                                    {shortDate}
+                                                </div>
+                                                <div className="text-xs text-[var(--text-muted)]">
+                                                    {year}
+                                                </div>
+                                            </div>
+
+                                            <div className="flex-grow">
+                                                <h3 className="text-lg font-bold text-[var(--text-secondary)] mb-1">
+                                                    {comp.title}
+                                                </h3>
+                                                <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+                                                    <span>{comp.location}</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
                     )}

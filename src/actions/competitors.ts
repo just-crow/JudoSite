@@ -5,6 +5,12 @@ import { verifySession } from './auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { uploadFile } from './file-upload'
+import {
+    isValidUUID,
+    validateCompetitorInput,
+    sanitizeString
+} from '@/lib/validation'
+import { unstable_cache } from 'next/cache'
 
 export interface Competitor {
     id: string
@@ -17,34 +23,74 @@ export interface Competitor {
     achievements: string[]
 }
 
-export async function getCompetitors(): Promise<Competitor[]> {
-    const { data, error } = await supabase
-        .from('competitors')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-    if (error || !data) return []
-
-    return data.map((item: any) => ({
-        id: item.id,
-        name: `${item.first_name} ${item.last_name}`,
-        category: item.category || '',
-        ageGroup: item.birth_year || '',
-        rank: item.belt || '',
-        description: '', // description might not be in DB schema, defaulting empty
-        image: item.image || '',
-        achievements: item.results ? item.results.split('\n') : []
-    }))
+// Supabase row type
+interface CompetitorRow {
+    id: string
+    first_name: string
+    last_name: string
+    category: string | null
+    birth_year: string | null
+    belt: string | null
+    image: string | null
+    results: string | null
 }
 
-export async function createCompetitor(formData: FormData) {
+/**
+ * Maps a database row to Competitor interface
+ */
+function mapRowToCompetitor(row: CompetitorRow): Competitor {
+    return {
+        id: row.id,
+        name: `${row.first_name} ${row.last_name}`.trim(),
+        category: row.category || '',
+        ageGroup: row.birth_year || '',
+        rank: row.belt || '',
+        description: '',
+        image: row.image || '',
+        achievements: row.results ? row.results.split('\n').filter(Boolean) : []
+    }
+}
+
+/**
+ * Gets all competitors with caching
+ */
+export const getCompetitors = unstable_cache(
+    async (): Promise<Competitor[]> => {
+        const { data, error } = await supabase
+            .from('competitors')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+        if (error || !data) {
+            if (process.env.NODE_ENV === 'development' && error) {
+                console.error("Error fetching competitors:", error.message)
+            }
+            return []
+        }
+
+        return (data as CompetitorRow[]).map(mapRowToCompetitor)
+    },
+    ['competitors'],
+    { revalidate: 300, tags: ['competitors'] }
+)
+
+/**
+ * Creates a new competitor (admin only)
+ */
+export async function createCompetitor(formData: FormData): Promise<void> {
     await verifySession()
 
-    const name = formData.get('name') as string
-    const category = formData.get('category') as string
-    const ageGroup = formData.get('ageGroup') as string
-    const rank = formData.get('rank') as string
-    const description = formData.get('description') as string
+    const name = sanitizeString(formData.get('name') as string || '')
+    const category = sanitizeString(formData.get('category') as string || '')
+    const ageGroup = sanitizeString(formData.get('ageGroup') as string || '')
+    const rank = sanitizeString(formData.get('rank') as string || '')
+
+    // Validate input
+    const validation = validateCompetitorInput({ name })
+    if (!validation.valid) {
+        console.error('Validation failed:', validation.error)
+        return
+    }
 
     // Split name
     const nameParts = name.trim().split(' ')
@@ -58,7 +104,9 @@ export async function createCompetitor(formData: FormData) {
         try {
             image = await uploadFile(formData)
         } catch (e) {
-            console.error("Upload failed", e)
+            if (process.env.NODE_ENV === 'development') {
+                console.error("Upload failed", e)
+            }
         }
     }
 
@@ -69,13 +117,15 @@ export async function createCompetitor(formData: FormData) {
         birth_year: ageGroup,
         belt: rank,
         image,
-        results: '' // achievements not passed in form, usually added later or need field
+        results: ''
     }
 
     const { error } = await supabase.from('competitors').insert(newItem)
 
     if (error) {
-        console.error("Error creating competitor", error)
+        if (process.env.NODE_ENV === 'development') {
+            console.error("Error creating competitor:", error.message)
+        }
         return
     }
 
@@ -84,7 +134,15 @@ export async function createCompetitor(formData: FormData) {
     redirect('/admin/competitors')
 }
 
-export async function getCompetitor(id: string) {
+/**
+ * Gets a single competitor by ID
+ */
+export async function getCompetitor(id: string): Promise<Competitor | undefined> {
+    // Validate UUID format
+    if (!isValidUUID(id)) {
+        return undefined
+    }
+
     const { data, error } = await supabase
         .from('competitors')
         .select('*')
@@ -93,26 +151,32 @@ export async function getCompetitor(id: string) {
 
     if (error || !data) return undefined
 
-    return {
-        id: data.id,
-        name: `${data.first_name} ${data.last_name}`,
-        category: data.category || '',
-        ageGroup: data.birth_year || '',
-        rank: data.belt || '',
-        description: '',
-        image: data.image || '',
-        achievements: data.results ? data.results.split('\n') : []
-    }
+    return mapRowToCompetitor(data as CompetitorRow)
 }
 
-export async function updateCompetitor(id: string, formData: FormData) {
+/**
+ * Updates an existing competitor (admin only)
+ */
+export async function updateCompetitor(id: string, formData: FormData): Promise<void> {
     await verifySession()
 
-    const name = formData.get('name') as string
-    const category = formData.get('category') as string
-    const ageGroup = formData.get('ageGroup') as string
-    const rank = formData.get('rank') as string
-    const description = formData.get('description') as string
+    // Validate UUID format
+    if (!isValidUUID(id)) {
+        console.error('Invalid competitor ID format')
+        return
+    }
+
+    const name = sanitizeString(formData.get('name') as string || '')
+    const category = sanitizeString(formData.get('category') as string || '')
+    const ageGroup = sanitizeString(formData.get('ageGroup') as string || '')
+    const rank = sanitizeString(formData.get('rank') as string || '')
+
+    // Validate input
+    const validation = validateCompetitorInput({ name })
+    if (!validation.valid) {
+        console.error('Validation failed:', validation.error)
+        return
+    }
 
     // Split name
     const nameParts = name.trim().split(' ')
@@ -126,12 +190,21 @@ export async function updateCompetitor(id: string, formData: FormData) {
         try {
             image = await uploadFile(formData)
         } catch (e) {
-            console.error("Upload failed", e)
+            if (process.env.NODE_ENV === 'development') {
+                console.error("Upload failed", e)
+            }
         }
     }
 
-    // Prepare update object
-    const updateData: any = {
+    // Prepare update object with proper typing
+    const updateData: {
+        first_name: string
+        last_name: string
+        category: string
+        birth_year: string
+        belt: string
+        image?: string
+    } = {
         first_name: firstName,
         last_name: lastName,
         category,
@@ -149,7 +222,9 @@ export async function updateCompetitor(id: string, formData: FormData) {
         .eq('id', id)
 
     if (error) {
-        console.error("Error updating competitor", error)
+        if (process.env.NODE_ENV === 'development') {
+            console.error("Error updating competitor:", error.message)
+        }
         return
     }
 
@@ -158,10 +233,26 @@ export async function updateCompetitor(id: string, formData: FormData) {
     redirect('/admin/competitors')
 }
 
-export async function deleteCompetitor(id: string) {
+/**
+ * Deletes a competitor (admin only)
+ */
+export async function deleteCompetitor(id: string): Promise<void> {
     await verifySession()
 
-    await supabase.from('competitors').delete().eq('id', id)
+    // Validate UUID format
+    if (!isValidUUID(id)) {
+        console.error('Invalid competitor ID format')
+        return
+    }
+
+    const { error } = await supabase.from('competitors').delete().eq('id', id)
+
+    if (error) {
+        if (process.env.NODE_ENV === 'development') {
+            console.error("Error deleting competitor:", error.message)
+        }
+        return
+    }
 
     revalidatePath('/takmicari')
     revalidatePath('/admin/competitors')

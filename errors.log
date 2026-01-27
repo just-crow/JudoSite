@@ -1,0 +1,2 @@
+﻿.next/dev/types/validator.ts(258,39): error TS2307: Cannot find module '../../../src/app/klub/dojo/page.js' or its corresponding type declarations.
+.next/dev/types/validator.ts(285,39): error TS2307: Cannot find module '../../../src/app/kontakt/page.js' or its corresponding type declarations.

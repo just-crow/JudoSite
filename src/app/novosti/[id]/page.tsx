@@ -69,16 +69,22 @@ export default async function NewsArticlePage(props: { params: Promise<{ id: str
                     </h1>
                 </header>
 
-                {/* Featured Image */}
-                <div className="relative w-full max-h-[600px] rounded-3xl overflow-hidden shadow-xl mb-10 group bg-[var(--surface-light)] flex items-center justify-center">
+                {/* Featured Image - Using Next.js Image for optimization */}
+                <div className="relative w-full rounded-3xl overflow-hidden shadow-xl mb-10 group bg-[var(--surface-light)]">
                     {article.image ? (
-                        <img
-                            src={article.image}
-                            alt={article.title}
-                            className="w-auto h-auto max-w-full max-h-[600px] object-contain"
-                        />
+                        <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
+                            <Image
+                                src={article.image}
+                                alt={article.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
+                                className="object-cover"
+                                priority
+                                quality={85}
+                            />
+                        </div>
                     ) : (
-                        <div className="w-full h-full bg-[var(--surface)] flex items-center justify-center">
+                        <div className="w-full h-64 bg-[var(--surface)] flex items-center justify-center">
                             <span className="text-[var(--text-muted)]">Nema slike</span>
                         </div>
                     )}
