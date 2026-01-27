@@ -4,7 +4,10 @@ import { cookies } from 'next/headers'
 import { SignJWT, jwtVerify } from 'jose'
 import { redirect } from 'next/navigation'
 
-const SECRET_KEY = process.env.SESSION_SECRET || 'super-secret-key-change-this'
+const SECRET_KEY = process.env.SESSION_SECRET
+if (!SECRET_KEY) {
+    throw new Error('SESSION_SECRET environment variable is not set')
+}
 const key = new TextEncoder().encode(SECRET_KEY)
 
 export async function encrypt(payload: any) {
@@ -30,7 +33,15 @@ export async function login(formData: FormData) {
     const handle = formData.get('handle')
     const password = formData.get('password')
 
-    if (handle === process.env.ADMIN_HANDLE && password === process.env.ADMIN_PASSWORD) {
+    const adminHandle = process.env.ADMIN_HANDLE
+    const adminPassword = process.env.ADMIN_PASSWORD
+
+    if (!adminHandle || !adminPassword) {
+        console.error('Admin credentials not configured in environment variables')
+        return { error: 'Sistem nije konfigurisan' }
+    }
+
+    if (handle === adminHandle && password === adminPassword) {
         // Create the session
         const expires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 1 day
         const session = await encrypt({ user: 'admin', expires })

@@ -17,11 +17,17 @@ export interface NewsItem {
     featured: boolean
 }
 
-export async function getNews(): Promise<NewsItem[]> {
-    const { data, error } = await supabase
+export async function getNews(limit?: number): Promise<NewsItem[]> {
+    let query = supabase
         .from('news')
         .select('*')
         .order('created_at', { ascending: false })
+
+    if (limit) {
+        query = query.limit(limit)
+    }
+
+    const { data, error } = await query
 
     if (error) {
         console.error('Error fetching news:', error)

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface NewsCardProps {
     title: string;
@@ -26,10 +27,11 @@ export default function NewsCard({
             <Link href={href} className="group flex items-start gap-4 p-5 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300 border border-transparent hover:border-[var(--border-light)] transform hover:-translate-y-1">
                 <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 relative shadow-sm group-hover:shadow-md transition-shadow">
                     {image ? (
-                        <img
+                        <Image
                             src={image}
                             alt={title}
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
                         />
                     ) : (
                         <div className="absolute inset-0 image-placeholder">
@@ -62,10 +64,11 @@ export default function NewsCard({
             {/* Image section */}
             <div className={`relative overflow-hidden ${size === 'large' ? 'h-72 lg:h-80' : 'h-56 lg:h-64'} image-placeholder`}>
                 {image ? (
-                    <img
+                    <Image
                         src={image}
                         alt={title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                 ) : (
                     <div className="absolute inset-0 flex items-center justify-center opacity-15">

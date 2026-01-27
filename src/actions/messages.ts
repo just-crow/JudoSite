@@ -18,6 +18,8 @@ export interface ContactMessage {
 }
 
 export async function getMessages(): Promise<ContactMessage[]> {
+    await verifySession()
+
     const { data, error } = await supabase
         .from('messages')
         .select('*')
@@ -25,7 +27,7 @@ export async function getMessages(): Promise<ContactMessage[]> {
 
     if (error || !data) return []
 
-    return data.map((item: any) => ({
+    return data.map((item) => ({
         id: item.id,
         firstName: item.first_name,
         lastName: item.last_name,
@@ -35,7 +37,7 @@ export async function getMessages(): Promise<ContactMessage[]> {
         message: item.message,
         createdAt: item.created_at,
         read: item.read
-    }))
+    })) as ContactMessage[]
 }
 
 export async function sendMessage(formData: FormData) {

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const footerLinks = {
     novosti: [
@@ -42,7 +43,14 @@ export default async function Footer() {
                     {/* Brand Section */}
                     <div className="lg:col-span-1 space-y-6">
                         <Link href="/" className="inline-block group">
-                            <img src='/ZeljeznicarIcon.png' className="w-40 h-40 rounded-2xl flex items-center justify-center mb-4" />
+                            <div className="relative w-40 h-40 rounded-2xl overflow-hidden mb-4">
+                                <Image
+                                    src="/ZeljeznicarIcon.png"
+                                    alt="Judo Klub Željezničar Logo"
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
                             <h2 className="text-2xl font-bold mb-1">Judo Klub</h2>
                             <p className="text-white/60 text-sm">Željezničar</p>
                         </Link>
@@ -128,7 +136,14 @@ export default async function Footer() {
                                     title={sponsor.name}
                                 >
                                     {sponsor.logo ? (
-                                        <img src={sponsor.logo} alt={sponsor.name} className="h-10 w-auto object-contain transition-all" />
+                                        <div className="relative h-10 w-32">
+                                            <Image
+                                                src={sponsor.logo}
+                                                alt={sponsor.name}
+                                                fill
+                                                className="object-contain"
+                                            />
+                                        </div>
                                     ) : (
                                         <span className="text-sm font-bold text-white group-hover:text-[var(--accent)] transition-colors">{sponsor.name}</span>
                                     )}
