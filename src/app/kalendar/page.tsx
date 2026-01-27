@@ -10,15 +10,17 @@ export const metadata: Metadata = {
 export default async function CalendarPage() {
     const competitions = await getCompetitions();
 
-    // Sort competitions by date (ascending for upcoming, descending for past)
-    const sortedCompetitions = [...competitions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
     const now = new Date();
-    // Normalize now to start of day for accurate comparison
     now.setHours(0, 0, 0, 0);
 
-    const upcoming = sortedCompetitions.filter(c => new Date(c.date) >= now);
-    const past = sortedCompetitions.filter(c => new Date(c.date) < now).reverse(); // Show most recent past first
+    // Upcoming: Ascending (Nearest date first)
+    const upcoming = competitions
+        .filter(c => new Date(c.date) >= now)
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // Past: Descending (Most recent past date first) - getCompetitions returns DESC by default
+    const past = competitions
+        .filter(c => new Date(c.date) < now);
 
     return (
         <div className="min-h-screen bg-[var(--background)]">

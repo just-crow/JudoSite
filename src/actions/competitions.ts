@@ -14,11 +14,29 @@ export interface Competition {
     registrationLink: string
 }
 
-export async function getCompetitions(): Promise<Competition[]> {
-    const { data, error } = await supabase
+export interface GetCompetitionsOptions {
+    upcomingOnly?: boolean;
+    limit?: number;
+}
+
+export async function getCompetitions(options: GetCompetitionsOptions = {}): Promise<Competition[]> {
+    let query = supabase
         .from('competitions')
-        .select('*')
-        .order('created_at', { ascending: false })
+        .select('*');
+
+    if (options.upcomingOnly) {
+        const today = new Date().toISOString().split('T')[0];
+        query = query.gte('date', today)
+            .order('date', { ascending: true });
+    } else {
+        query = query.order('date', { ascending: false });
+    }
+
+    if (options.limit) {
+        query = query.limit(options.limit);
+    }
+
+    const { data, error } = await query;
 
     if (error || !data) return []
 

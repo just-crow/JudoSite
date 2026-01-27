@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -21,7 +22,7 @@ export default function KlubPage() {
                             Judo Klub Željezničar
                         </h1>
                         <p className="text-xl text-[var(--text-secondary)]">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Od 1952. godine razvijamo judo kulturu i sportsku izvrsnost u Bosni i Hercegovini.
+                            Više od sedam decenija tradicije, strasti i vrhunskih rezultata. Ponosni smo dom šampiona i škola života za mlade generacije.
                         </p>
                     </div>
                 </div>
@@ -34,20 +35,21 @@ export default function KlubPage() {
                         <div>
                             <h2 className="text-3xl font-bold text-white mb-6">Naša misija</h2>
                             <p className="text-[var(--text-secondary)] mb-4">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+                                Kroz učenje judo vještina, težimo izgradnji snažnog karaktera, samopouzdanja i discipline kod naših članova. Vjerujemo da je sport moćan alat za pozitivan razvoj mladih ljudi.
                             </p>
                             <p className="text-[var(--text-secondary)] mb-4">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Naš stručni tim trenera posvećen je svakom pojedincu, bilo da su u pitanju rekreativci ili takmičari koji ciljaju na najviša postolja. Njegujemo atmosferu međusobnog poštovanja i podrške.
                             </p>
                             <p className="text-[var(--text-secondary)]">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                Judo Klub Željezničar nije samo mjesto za trening, već zajednica koja dijeli iste vrijednosti i strast prema ovom olimpijskom sportu.
                             </p>
                         </div>
                         <div className="relative h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-[var(--surface)] to-[var(--surface-light)]">
-                            <img
-                                src="/images/486677264_620710237636162_8126068584696942124_n.jpg"
-                                alt="Judo Klub Željezničar"
-                                className="w-full h-full object-cover"
+                            <Image
+                                src="/images/group-picture.jpg"
+                                alt="Judo Klub Željezničar Grupa"
+                                fill
+                                className="object-cover"
                             />
                         </div>
                     </div>
@@ -62,7 +64,7 @@ export default function KlubPage() {
                             <div>
                                 <h2 className="text-3xl font-bold text-white mb-4">Naš Dojo</h2>
                                 <p className="text-[var(--text-secondary)] mb-6">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Naš dojo je opremljen najmodernijom opremom i prostire se na 500 kvadratnih metara.
+                                    Naš trenažni centar pruža optimalne uslove za rad i napredak. Prostran, siguran i profesionalno održavan prostor omogućava nesmetan trening za sve uzraste.
                                 </p>
                                 <ul className="space-y-3">
                                     {["300m² tatami prostora", "Fitness sala", "Svlačionice sa tuševima", "Parking", "Pristup za invalidska kolica"].map((feature, i) => (
@@ -80,7 +82,8 @@ export default function KlubPage() {
                                     <span className="text-8xl">🥋</span>
                                 </div>
                                 <div className="absolute bottom-4 left-4 right-4 text-center text-[var(--text-muted)] text-sm">
-                                    [Placeholder za sliku doja]
+                                    {/* Abstract Dojo Representation */}
+                                    <div className="text-[var(--primary)] font-bold tracking-widest opacity-30">DOJO</div>
                                 </div>
                             </div>
                         </div>

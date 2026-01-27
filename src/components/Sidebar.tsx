@@ -3,14 +3,8 @@ import { getCompetitions } from '@/actions/competitions';
 import { getSponsors } from '@/actions/sponsors';
 
 export default async function Sidebar() {
-    const competitions = await getCompetitions();
+    const upcomingCompetitions = await getCompetitions({ upcomingOnly: true, limit: 3 });
     const sponsors = await getSponsors();
-
-    // Sort competitions by date and take next 3
-    const upcomingCompetitions = competitions
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        .filter(c => new Date(c.date) >= new Date()) // Only future events? Or just all? Let's show all sorted for now or filtered.
-        .slice(0, 3);
 
     return (
         <div className="space-y-10">

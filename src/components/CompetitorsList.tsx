@@ -27,8 +27,8 @@ export default function CompetitorsList({ competitors }: CompetitorsListProps) {
                         key={group}
                         onClick={() => setFilter(group)}
                         className={`px-6 py-3 rounded-full text-sm font-bold transition-all shadow-sm ${filter === group
-                                ? "bg-[var(--primary)] text-white shadow-lg scale-105"
-                                : "bg-white text-[var(--text-secondary)] hover:bg-[var(--primary-light)] hover:text-white"
+                            ? "bg-[var(--primary)] text-white shadow-lg scale-105"
+                            : "bg-white text-[var(--text-secondary)] hover:bg-[var(--primary-light)] hover:text-white"
                             }`}
                     >
                         {group}

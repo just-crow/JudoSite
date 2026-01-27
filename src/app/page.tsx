@@ -186,7 +186,7 @@ export default async function Home() {
                 <div className="absolute inset-0 bg-gradient-to-tr from-[var(--primary)]/20 to-transparent z-10 group-hover:opacity-0 transition-opacity duration-500" />
                 {/* Replace with actual club photo or high quality placeholder */}
                 <img
-                  src="/images/486677264_620710237636162_8126068584696942124_n.jpg"
+                  src="/images/group-picture.jpg"
                   alt="Judo Klub Željezničar Tim"
                   className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
                 />
