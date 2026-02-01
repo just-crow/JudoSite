@@ -1,9 +1,10 @@
 'use server'
 
 import { supabase } from '@/lib/supabase'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, unstable_cache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { verifySession } from './auth'
+import { validateMessageInput, sanitizeString, validateUUID } from '@/lib/validation'
 
 export interface ContactMessage {
     id: string
@@ -17,7 +18,13 @@ export interface ContactMessage {
     read: boolean
 }
 
-export async function getMessages(): Promise<ContactMessage[]> {
+const fetchMessages = async (): Promise<ContactMessage[]> => {
+    // Only admin usually sees messages, so verifySession might be good here too if called from client
+    // constructing getter for admin page
+
+    // Note: Verify session for data fetching? If getMessages is used in server component (page), 
+    // verifySession acts on cookies. 
+
     const { data, error } = await supabase
         .from('messages')
         .select('*')
@@ -38,16 +45,27 @@ export async function getMessages(): Promise<ContactMessage[]> {
     }))
 }
 
-export async function sendMessage(formData: FormData) {
-    const firstName = formData.get('firstName') as string
-    const lastName = formData.get('lastName') as string
-    const email = formData.get('email') as string
-    const phone = formData.get('phone') as string
-    const subject = formData.get('subject') as string
-    const message = formData.get('message') as string
+// Caching messages for short time, or not at all? Messages are real-time ish. 
+// 60 seconds seems reasonable for admin dashboard.
+export const getMessages = unstable_cache(
+    async () => fetchMessages(),
+    ['messages'],
+    { revalidate: 60, tags: ['messages'] }
+)
 
-    if (!firstName || !email || !message) {
-        return { success: false, error: 'Molimo ispunite obavezna polja.' }
+export async function sendMessage(formData: FormData) {
+    // Public action, no session check
+
+    const firstName = sanitizeString(formData.get('firstName') as string || '')
+    const lastName = sanitizeString(formData.get('lastName') as string || '')
+    const email = sanitizeString(formData.get('email') as string || '')
+    const phone = sanitizeString(formData.get('phone') as string || '')
+    const subject = sanitizeString(formData.get('subject') as string || '')
+    const message = sanitizeString(formData.get('message') as string || '')
+
+    const validation = validateMessageInput({ name: firstName, email, subject, message })
+    if (!validation.valid) {
+        return { success: false, error: validation.error }
     }
 
     const newItem = {
@@ -70,17 +88,22 @@ export async function sendMessage(formData: FormData) {
     return { success: true }
 }
 
-export async function deleteMessage(id: string) {
+export async function deleteMessage(id: string): Promise<void> {
     await verifySession()
+    if (!validateUUID(id)) return
 
     await supabase.from('messages').delete().eq('id', id)
 
     revalidatePath('/admin/messages')
+    // No redirect usually for delete in list, but existing code had it. 
+    // If we redirect, it refreshes the page. 
+    // Keeping behavior but usually return void is enough if action called from form.
     redirect('/admin/messages')
 }
 
-export async function markAsRead(id: string) {
+export async function markAsRead(id: string): Promise<void> {
     await verifySession()
+    if (!validateUUID(id)) return
 
     await supabase
         .from('messages')

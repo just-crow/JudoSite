@@ -1,6 +1,7 @@
 import { getAlbum, getAlbums } from '@/actions/gallery';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 
 export async function generateStaticParams() {
     const albums = await getAlbums();
@@ -10,9 +11,6 @@ export async function generateStaticParams() {
 }
 
 export default async function AlbumPage({ params }: { params: { id: string } }) {
-    // Await params first to satisfy Next.js 15+ requirements if necessary, 
-    // though typically params are accessible. 
-    // Safety check: ensure params is ready.
     const { id } = await params;
     const album = await getAlbum(id);
 
@@ -23,14 +21,20 @@ export default async function AlbumPage({ params }: { params: { id: string } }) 
     return (
         <main className="min-h-screen bg-[var(--background)]">
             {/* Hero / Header */}
-            <section className="relative mt-12 overflow-hidden">
-                <div
-                    className="absolute inset-0 bg-cover bg-center -z-20"
-                    style={{ backgroundImage: `url(${album.coverImage})` }}
-                />
+            <section className="relative mt-12 overflow-hidden min-h-[400px] flex items-center">
+                {album.coverImage && (
+                    <Image
+                        src={album.coverImage}
+                        alt={album.title}
+                        fill
+                        className="object-cover -z-20"
+                        priority
+                        quality={85}
+                    />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/80 to-[var(--primary-dark)]/80 -z-10" />
 
-                <div className="container relative z-10">
+                <div className="container relative z-10 pt-20">
                     <Link href="/novosti/galerije" className="inline-flex items-center gap-2 text-black hover:text-gray-600 mb-8 transition-colors group">
                         <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/20 transition-all">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,12 +69,16 @@ export default async function AlbumPage({ params }: { params: { id: string } }) 
                                 className="break-inside-avoid relative group rounded-2xl overflow-hidden shadow-lg animate-fade-in-up"
                                 style={{ animationDelay: `${index * 50}ms` }}
                             >
-                                <img
+                                <Image
                                     src={img}
                                     alt={`${album.title} - Slika ${index + 1}`}
+                                    width={0}
+                                    height={0}
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                     className="w-full h-auto transform transition-transform duration-700 group-hover:scale-105"
+                                    loading="lazy"
                                 />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 pointer-events-none" />
                             </div>
                         ))}
                     </div>

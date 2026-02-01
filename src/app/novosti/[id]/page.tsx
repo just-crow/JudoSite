@@ -70,12 +70,15 @@ export default async function NewsArticlePage(props: { params: Promise<{ id: str
                 </header>
 
                 {/* Featured Image */}
-                <div className="relative w-full max-h-[600px] rounded-3xl overflow-hidden shadow-xl mb-10 group bg-[var(--surface-light)] flex items-center justify-center">
+                <div className="relative w-full aspect-video rounded-3xl overflow-hidden shadow-xl mb-10 group bg-[var(--surface-light)] flex items-center justify-center">
                     {article.image ? (
-                        <img
+                        <Image
                             src={article.image}
                             alt={article.title}
-                            className="w-auto h-auto max-w-full max-h-[600px] object-contain"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 896px"
+                            priority
                         />
                     ) : (
                         <div className="w-full h-full bg-[var(--surface)] flex items-center justify-center">

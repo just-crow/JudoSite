@@ -2,9 +2,10 @@
 
 import { supabase } from '@/lib/supabase'
 import { verifySession } from './auth'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, unstable_cache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { uploadFile, uploadFileObject } from './file-upload'
+import { validateGalleryAlbumInput, sanitizeString, validateUUID } from '@/lib/validation'
 
 export interface GalleryAlbum {
     id: string
@@ -14,7 +15,7 @@ export interface GalleryAlbum {
     images: string[]
 }
 
-export async function getAlbums(): Promise<GalleryAlbum[]> {
+const fetchAlbums = async (): Promise<GalleryAlbum[]> => {
     const { data, error } = await supabase
         .from('gallery')
         .select('*')
@@ -22,7 +23,6 @@ export async function getAlbums(): Promise<GalleryAlbum[]> {
 
     if (error || !data) return []
 
-    // Map DB snake_case to CamelCase
     return data.map((item: any) => ({
         id: item.id,
         title: item.title,
@@ -32,7 +32,15 @@ export async function getAlbums(): Promise<GalleryAlbum[]> {
     }))
 }
 
+export const getAlbums = unstable_cache(
+    async () => fetchAlbums(),
+    ['gallery_albums'],
+    { revalidate: 300, tags: ['gallery'] }
+)
+
 export async function getAlbum(id: string): Promise<GalleryAlbum | null> {
+    if (!validateUUID(id)) return null
+
     const { data, error } = await supabase
         .from('gallery')
         .select('*')
@@ -50,16 +58,20 @@ export async function getAlbum(id: string): Promise<GalleryAlbum | null> {
     }
 }
 
-export async function createAlbum(formData: FormData) {
+export async function createAlbum(formData: FormData): Promise<void> {
     await verifySession()
 
-    const title = formData.get('title') as string
-    const date = formData.get('date') as string
+    const title = sanitizeString(formData.get('title') as string || '')
+    const date = formData.get('date') as string || ''
 
-    // Check for file upload for cover image
+    const validation = validateGalleryAlbumInput({ title, date })
+    if (!validation.valid) {
+        console.error('Validation failed:', validation.error)
+        return
+    }
+
     const file = formData.get('file') as File
     let coverImage = formData.get('coverImage') as string
-
     if (file && file.size > 0 && file.name !== 'undefined') {
         try {
             coverImage = await uploadFile(formData)
@@ -75,7 +87,7 @@ export async function createAlbum(formData: FormData) {
         title,
         date,
         cover_image: coverImage || 'https://images.unsplash.com/photo-1544367563-12123d832d34?auto=format&fit=crop&q=80',
-        images: images.length > 0 ? images : [coverImage]
+        images: images.length > 0 ? images : (coverImage ? [coverImage] : [])
     }
 
     const { error } = await supabase.from('gallery').insert(newAlbum)
@@ -90,18 +102,24 @@ export async function createAlbum(formData: FormData) {
     redirect('/admin/gallery')
 }
 
-export async function updateAlbum(id: string, formData: FormData) {
+export async function updateAlbum(id: string, formData: FormData): Promise<void> {
     await verifySession()
+    if (!validateUUID(id)) return
 
-    const title = formData.get('title') as string
-    const date = formData.get('date') as string
+    const title = sanitizeString(formData.get('title') as string || '')
+    const date = formData.get('date') as string || ''
+
+    const validation = validateGalleryAlbumInput({ title, date })
+    if (!validation.valid) {
+        console.error('Validation failed:', validation.error)
+        return
+    }
+
     const coverImageInput = formData.get('coverImage') as string
-
-    // Check for new cover file
-    const file = formData.get('file') as File
     let coverImage = coverImageInput
 
-    if (file && file.size > 0 && file.name !== 'undefined') {
+    const file = formData.get('file') as File
+    if (file && file.size > 0) {
         try {
             coverImage = await uploadFile(formData)
         } catch (e) {
@@ -109,18 +127,17 @@ export async function updateAlbum(id: string, formData: FormData) {
         }
     }
 
-    // Get existing album to check if cover needs fallback
-    const existing = await getAlbum(id)
-    if (!existing) return
+    const imagesInput = formData.get('images') as string
+    const images = imagesInput ? imagesInput.split(',').map(s => s.trim()).filter(s => s) : []
 
-    const { error } = await supabase
-        .from('gallery')
-        .update({
-            title,
-            date,
-            cover_image: coverImage || existing.coverImage
-        })
-        .eq('id', id)
+    const updatedAlbum = {
+        title,
+        date,
+        cover_image: coverImage,
+        images
+    }
+
+    const { error } = await supabase.from('gallery').update(updatedAlbum).eq('id', id)
 
     if (error) {
         console.error("Error updating album", error)
@@ -128,27 +145,49 @@ export async function updateAlbum(id: string, formData: FormData) {
     }
 
     revalidatePath('/admin/gallery')
-    revalidatePath(`/admin/gallery/${id}`)
     revalidatePath('/novosti/galerije')
     revalidatePath(`/novosti/galerije/${id}`)
+    redirect('/admin/gallery')
 }
 
-export async function addImagesToAlbum(id: string, formData: FormData) {
+export async function deleteAlbum(id: string): Promise<void> {
     await verifySession()
+    if (!validateUUID(id)) return
+
+    const { error } = await supabase.from('gallery').delete().eq('id', id)
+
+    if (error) {
+        console.error("Error deleting album", error)
+        return
+    }
+
+    revalidatePath('/admin/gallery')
+    revalidatePath('/novosti/galerije')
+}
+
+export async function addImagesToAlbum(id: string, formData: FormData): Promise<void> {
+    await verifySession()
+    if (!validateUUID(id)) return
 
     const album = await getAlbum(id)
     if (!album) return
 
-    const newImages: string[] = []
+    let newImages: string[] = []
 
-    // Handle Multiple Files Upload
+    // 1. Check for manual URL
+    const imageUrl = sanitizeString(formData.get('imageUrl') as string || '')
+    if (imageUrl) {
+        newImages.push(imageUrl)
+    }
+
+    // 2. Check for uploaded files (bulk)
     const files = formData.getAll('file') as File[]
-    const validFiles = files.filter(f => f.size > 0 && f.name !== 'undefined')
+    if (files.length > 0) {
+        const uploadPromises = files
+            .filter(f => f.size > 0 && f.name !== 'undefined')
+            .map(f => uploadFileObject(f))
 
-    if (validFiles.length > 0) {
         try {
-            // Upload all files in parallel
-            const uploadPromises = validFiles.map(file => uploadFileObject(file))
             const uploadedUrls = await Promise.all(uploadPromises)
             newImages.push(...uploadedUrls)
         } catch (e) {
@@ -156,48 +195,43 @@ export async function addImagesToAlbum(id: string, formData: FormData) {
         }
     }
 
-    // Handle URL input (legacy support or text input)
-    const urlInput = formData.get('imageUrl') as string
-    if (urlInput) {
-        newImages.push(urlInput)
-    }
+    if (newImages.length === 0) return
 
-    if (newImages.length > 0) {
-        // Append to existing images
-        const updatedImages = [...album.images, ...newImages]
+    const updatedImages = [...album.images, ...newImages]
 
-        await supabase
-            .from('gallery')
-            .update({ images: updatedImages })
-            .eq('id', id)
-
-        revalidatePath(`/admin/gallery/${id}`)
-        revalidatePath(`/novosti/galerije/${id}`)
-    }
-}
-
-export async function removeImageFromAlbum(id: string, imageUrl: string) {
-    await verifySession()
-
-    const album = await getAlbum(id)
-    if (!album) return
-
-    const updatedImages = album.images.filter(img => img !== imageUrl)
-
-    await supabase
+    const { error } = await supabase
         .from('gallery')
         .update({ images: updatedImages })
         .eq('id', id)
 
-    revalidatePath(`/admin/gallery/${id}`)
+    if (error) {
+        console.error("Error adding images", error)
+        return
+    }
+
     revalidatePath(`/novosti/galerije/${id}`)
+    revalidatePath('/admin/gallery')
 }
 
-export async function deleteAlbum(id: string) {
+export async function removeImageFromAlbum(id: string, imageToRemove: string): Promise<void> {
     await verifySession()
+    if (!validateUUID(id)) return
 
-    await supabase.from('gallery').delete().eq('id', id)
+    const album = await getAlbum(id)
+    if (!album) return
 
+    const updatedImages = album.images.filter(img => img !== imageToRemove)
+
+    const { error } = await supabase
+        .from('gallery')
+        .update({ images: updatedImages })
+        .eq('id', id)
+
+    if (error) {
+        console.error("Error removing image", error)
+        return
+    }
+
+    revalidatePath(`/novosti/galerije/${id}`)
     revalidatePath('/admin/gallery')
-    revalidatePath('/novosti/galerije')
 }

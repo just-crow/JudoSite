@@ -2,9 +2,10 @@
 
 import { supabase } from '@/lib/supabase'
 import { verifySession } from './auth'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, unstable_cache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { uploadFile } from './file-upload'
+import { validateSponsorInput, sanitizeString, validateUUID } from '@/lib/validation'
 
 export interface Sponsor {
     id: string
@@ -13,7 +14,7 @@ export interface Sponsor {
     website: string
 }
 
-export async function getSponsors(): Promise<Sponsor[]> {
+const fetchSponsors = async (): Promise<Sponsor[]> => {
     const { data, error } = await supabase
         .from('sponsors')
         .select('*')
@@ -29,13 +30,24 @@ export async function getSponsors(): Promise<Sponsor[]> {
     }))
 }
 
-export async function createSponsor(formData: FormData) {
+export const getSponsors = unstable_cache(
+    async () => fetchSponsors(),
+    ['sponsors'],
+    { revalidate: 300, tags: ['sponsors'] }
+)
+
+export async function createSponsor(formData: FormData): Promise<void> {
     await verifySession()
 
-    const name = formData.get('name') as string
-    const website = formData.get('website') as string
+    const name = sanitizeString(formData.get('name') as string || '')
+    const website = sanitizeString(formData.get('website') as string || '')
 
-    // Image Upload
+    const validation = validateSponsorInput({ name, website })
+    if (!validation.valid) {
+        console.error('Validation failed:', validation.error)
+        return
+    }
+
     let logo = ''
     const file = formData.get('file') as File
     if (file && file.size > 0) {
@@ -47,7 +59,7 @@ export async function createSponsor(formData: FormData) {
     }
 
     const newItem = {
-        name, website, logo, partner_type: 'gold' // Default or add field
+        name, website, logo, partner_type: 'gold'
     }
 
     const { error } = await supabase.from('sponsors').insert(newItem)
@@ -63,6 +75,8 @@ export async function createSponsor(formData: FormData) {
 }
 
 export async function getSponsor(id: string) {
+    if (!validateUUID(id)) return undefined
+
     const { data, error } = await supabase
         .from('sponsors')
         .select('*')
@@ -79,13 +93,20 @@ export async function getSponsor(id: string) {
     }
 }
 
-export async function updateSponsor(id: string, formData: FormData) {
+export async function updateSponsor(id: string, formData: FormData): Promise<void> {
     await verifySession()
 
-    const name = formData.get('name') as string
-    const website = formData.get('website') as string
+    if (!validateUUID(id)) return
 
-    // Image Upload
+    const name = sanitizeString(formData.get('name') as string || '')
+    const website = sanitizeString(formData.get('website') as string || '')
+
+    const validation = validateSponsorInput({ name, website })
+    if (!validation.valid) {
+        console.error('Validation failed:', validation.error)
+        return
+    }
+
     const file = formData.get('file') as File
     let logo = ''
     if (file && file.size > 0) {
@@ -99,10 +120,7 @@ export async function updateSponsor(id: string, formData: FormData) {
     const updateData: any = { name, website }
     if (logo) updateData.logo = logo
 
-    const { error } = await supabase
-        .from('sponsors')
-        .update(updateData)
-        .eq('id', id)
+    const { error } = await supabase.from('sponsors').update(updateData).eq('id', id)
 
     if (error) {
         console.error("Error updating sponsor", error)
@@ -114,10 +132,16 @@ export async function updateSponsor(id: string, formData: FormData) {
     redirect('/admin/sponsors')
 }
 
-export async function deleteSponsor(id: string) {
+export async function deleteSponsor(id: string): Promise<void> {
     await verifySession()
+    if (!validateUUID(id)) return
 
-    await supabase.from('sponsors').delete().eq('id', id)
+    const { error } = await supabase.from('sponsors').delete().eq('id', id)
+    if (error) {
+        console.error("Error deleting sponsor", error)
+        return
+    }
 
+    revalidatePath('/')
     revalidatePath('/admin/sponsors')
 }
