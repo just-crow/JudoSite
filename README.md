@@ -1,5 +1,42 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Competition Auto Sync (JudoManager)
+
+Upcoming competitions can be imported automatically from JudoManager.
+
+### Environment variables
+
+Add these variables in your environment file:
+
+```env
+# Optional (defaults to the BIH calendar URL)
+JUDOMANAGER_CALENDAR_URL=https://portal.judomanager.com/calendar?&mode=2&country=47
+
+# Required for cron/API protection
+JUDOMANAGER_SYNC_SECRET=your-strong-secret
+
+# Optional when deploying on Vercel Cron (Bearer token support)
+CRON_SECRET=your-strong-secret
+```
+
+### Manual admin sync
+
+Go to `/admin/competitions` and click **Sync JudoManager**.
+
+### Automatic daily sync
+
+`vercel.json` includes a daily cron job targeting:
+
+- `GET /api/competitions/sync`
+
+The endpoint is protected and accepts:
+
+- `Authorization: Bearer <secret>`
+- `x-sync-secret: <secret>`
+- `?secret=<secret>`
+
+Only upcoming BIH events are imported, and records are upserted by `title + date + location`.
+
 ## Getting Started
 
 First, run the development server:

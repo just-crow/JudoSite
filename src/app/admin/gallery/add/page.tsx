@@ -65,10 +65,9 @@ export default function AddAlbumPage() {
                             <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Datum</label>
                             <input
                                 name="date"
-                                type="text"
+                                type="date"
                                 required
                                 className="w-full px-4 py-3 rounded-xl border border-[var(--border)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 outline-none transition-all"
-                                placeholder="npr. 12.03.2025"
                             />
                         </div>
                     </div>

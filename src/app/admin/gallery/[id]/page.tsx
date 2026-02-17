@@ -48,7 +48,7 @@ export default async function EditAlbumPage({ params }: { params: { id: string }
                             <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Datum</label>
                             <input
                                 name="date"
-                                type="text"
+                                type="date"
                                 defaultValue={album.date}
                                 required
                                 className="w-full px-4 py-3 rounded-xl border border-[var(--border)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 outline-none transition-all"

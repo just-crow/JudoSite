@@ -2,12 +2,12 @@ export function formatCalendarDate(dateString: string): { day: string; month: st
     const d = new Date(dateString);
     return {
         day: d.getDate().toString(),
-        month: d.toLocaleString('hr-HR', { month: 'short' }).toUpperCase()
+        month: d.toLocaleString('bs-BA', { month: 'short' }).toUpperCase()
     };
 }
 
 export function formatShortDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('hr-HR');
+    return new Date(dateString).toLocaleDateString('bs-BA');
 }
 
 export function partitionByDate<T extends { date: string }>(items: T[]) {

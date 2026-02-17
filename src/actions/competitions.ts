@@ -5,6 +5,7 @@ import { verifySession } from './auth'
 import { revalidatePath, unstable_cache } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { validateCompetitionInput, sanitizeString, validateUUID } from '@/lib/validation'
+import { syncCompetitionsFromJudoManager } from '@/lib/competition-sync'
 
 export interface Competition {
     id: string
@@ -177,4 +178,17 @@ export async function deleteCompetition(id: string): Promise<void> {
     revalidatePath('/')
     revalidatePath('/kalendar')
     revalidatePath('/admin/competitions')
+}
+
+export async function syncCompetitionsFromJudoManagerAction(): Promise<void> {
+    await verifySession()
+
+    const result = await syncCompetitionsFromJudoManager()
+    console.log('Competition sync completed:', result)
+
+    revalidatePath('/')
+    revalidatePath('/kalendar')
+    revalidatePath('/admin/competitions')
+
+    redirect('/admin/competitions')
 }

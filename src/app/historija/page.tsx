@@ -2,52 +2,45 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Historija | Judo Klub Željezničar",
-    description: "Historija Judo Kluba Željezničar od osnivanja 1952. godine do danas.",
+    description: "Historija Judo Kluba Željezničar od osnivanja 1958. godine do danas.",
 };
 
 const timeline = [
     {
-        year: "1952",
+        year: "1958",
         title: "Osnivanje kluba",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Judo Klub Željezničar osnovan je kao jedan od prvih judo klubova u Jugoslaviji.",
+        description: "Džudo klub “Željezničar” je formiran 1958. godine.",
     },
     {
-        year: "1965",
-        title: "Prva zlatna medalja",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Naš prvi takmičar osvojio je zlato na Državnom prvenstvu.",
+        year: "1973/1974",
+        title: "Ulazak u Prvu ligu Jugoslavije",
+        description: "JUDO klub “Željezničar” je ušao u Prvu ligu Jugoslavije.",
     },
     {
-        year: "1978",
-        title: "Otvaranje nove dvorane",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Otvoren je novi dojo sa modernom opremom.",
+        year: "1981/1982",
+        title: "Prvaci Jugoslavije",
+        description: "Klub je bio prvak Jugoslavije i osvojio III mjesto u Evropi.",
     },
     {
-        year: "1984",
-        title: "Olimpijske igre u Sarajevu",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Naši članovi učestvovali su u promociji sporta tokom Zimskih olimpijskih igara.",
+        year: "1983/1984",
+        title: "Prvaci Kupa Jugoslavije",
+        description: "Klub je bio prvak Kupa Jugoslavije i drugi put viceprvak u Evropi.",
     },
     {
-        year: "1995",
-        title: "Obnova nakon rata",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Obnovili smo aktivnosti kluba i nastavili sa tradicijom juda.",
+        year: "1984–1992",
+        title: "Period uspješnih takmičenja",
+        description: "U ovom periodu klub je imao veoma uspješna takmičenja.",
     },
     {
-        year: "2010",
-        title: "100 medalja na međunarodnim takmičenjima",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dostigli smo značajnu prekretnicu u historiji kluba.",
+        year: "1992–1995",
+        title: "Treninzi u “FIS-u” Sarajevo",
+        description: "Tokom ratnog perioda treninzi su se održavali u “FIS-u” Sarajevo.",
     },
     {
-        year: "2024",
-        title: "Kontinuirani uspjeh",
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Klub nastavlja sa nizanjem uspjeha na domaćoj i međunarodnoj sceni.",
+        year: "1993",
+        title: "Početak Memorijalnog turnira “Vinko Šamarlić”",
+        description: "Organizovan je prvi Memorijalni turnir u opkoljenom Sarajevu u čast heroja, dugogodišnjeg člana kluba i trenera Vinka Šamarlića.",
     },
-];
-
-const achievements = [
-    { label: "Državna prvenstva", count: "45" },
-    { label: "Međunarodne medalje", count: "150+" },
-    { label: "Reprezentativci BiH", count: "30+" },
-    { label: "Generacija takmičara", count: "70+" },
 ];
 
 export default function HistorijaPage() {
@@ -60,25 +53,11 @@ export default function HistorijaPage() {
                     <div className="max-w-3xl">
                         <span className="tag mb-4">Historija</span>
                         <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                            Više od 70 godina tradicije
+                            Više od 60 godina tradicije
                         </h1>
                         <p className="text-xl text-white">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Od skromnih početaka 1952. godine do danas, naš klub je postao sinonim za judo izvrsnost.
+                            Klub sa dugom tradicijom vrhunskih rezultata i snažnim uticajem na razvoj juda u Sarajevu i Bosni i Hercegovini.
                         </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* Achievements Stats */}
-            <section className="section">
-                <div className="container">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                        {achievements.map((item, index) => (
-                            <div key={index} className="card p-6 text-center">
-                                <p className="text-4xl font-bold gradient-text mb-2">{item.count}</p>
-                                <p className="text-[var(--text-secondary)]">{item.label}</p>
-                            </div>
-                        ))}
                     </div>
                 </div>
             </section>
@@ -117,23 +96,36 @@ export default function HistorijaPage() {
                 </div>
             </section>
 
-            {/* Notable Alumni */}
+            {/* Champions and legacy */}
             <section className="section">
                 <div className="container">
-                    <h2 className="text-3xl font-bold text-[var(--secondary)] mb-8 flex items-center gap-3">
-                        <span className="w-1 h-8 bg-[var(--secondary)] rounded-full"></span>
-                        Poznati bivši članovi
-                    </h2>
-                    <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="card p-6 text-center">
-                                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--surface)] flex items-center justify-center">
-                                    <span className="text-2xl text-[var(--secondary)]">👤</span>
-                                </div>
-                                <h3 className="text-lg font-bold text-white">Ime Prezime</h3>
-                                <p className="text-[var(--text-secondary)] text-sm">Lorem ipsum dolor sit amet</p>
-                            </div>
-                        ))}
+                    <div className="space-y-6 max-w-5xl mx-auto">
+                        <div className="card p-6 md:p-8">
+                            <h2 className="text-2xl font-bold text-[var(--secondary)] mb-4">Šampioni kluba</h2>
+                            <p className="text-[var(--text-secondary)] leading-relaxed">
+                                U dosadašnjem periodu klub je iznjedrio mnoge šampione i to u bivšoj Jugoslaviji: Jokić, Gavrilović, Mehičević, Mučibabić, Todorović, Kusmuk i drugi.
+                                Zatim i poslijeratne šampione: Amel Mekić (evropski prvak), Nemanja Majdov (svjetski i evropski prvak), Kačar Slobodan, braća Lukač i drugi.
+                            </p>
+                        </div>
+
+                        <div className="card p-6 md:p-8">
+                            <h2 className="text-2xl font-bold text-[var(--secondary)] mb-4">Uloga kluba u razvoju juda</h2>
+                            <p className="text-[var(--text-secondary)] leading-relaxed">
+                                Ono što je bitno napomenuti jeste da su većinu JUDO klubova koji egzistiraju na području Sarajeva osnovali prvotimci JUDO KLUBA “Željezničar”.
+                            </p>
+                        </div>
+
+                        <div className="card p-6 md:p-8">
+                            <h2 className="text-2xl font-bold text-[var(--secondary)] mb-4">Ciljevi projekta</h2>
+                            <p className="text-[var(--text-secondary)] leading-relaxed mb-3">
+                                <span className="underline font-semibold text-[var(--text-primary)]">Sveukupni cilj projekta je:</span>{" "}
+                                Poboljšanje kvaliteta života učenika kroz fizički, mentalni i socijalni razvoj.
+                            </p>
+                            <p className="text-[var(--text-secondary)] leading-relaxed">
+                                <span className="underline font-semibold text-[var(--text-primary)]">Specifični cilj projekta:</span>{" "}
+                                Razvijanje zdravih stilova života za učenike, sa posebnim akcentom na učenike sa poteškoćama.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>

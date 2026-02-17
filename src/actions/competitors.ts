@@ -61,12 +61,7 @@ export async function createCompetitor(formData: FormData): Promise<void> {
     const firstName = nameParts[0]
     const lastName = nameParts.slice(1).join(' ') || ''
 
-    // Validate
-    // Note: older code used 'ageGroup' as 'birth_year'. Validation expects 'birthDate' regex YYYY-MM-DD. 
-    // If input is YYYY-MM-DD, strict validation works. If it's just '2010', it fails.
-    // I will adjust validation logic or input usage. Assuming 'ageGroup' refers to birth date string.
-
-    const validation = validateCompetitorInput({ firstName, lastName, birthDate: ageGroup, category, rank })
+    const validation = validateCompetitorInput({ firstName, lastName, ageGroup, category, rank })
     if (!validation.valid) {
         console.error('Validation failed:', validation.error)
         // Ideally return errors to UI, but void return requested.
@@ -142,7 +137,7 @@ export async function updateCompetitor(id: string, formData: FormData): Promise<
     const firstName = nameParts[0]
     const lastName = nameParts.slice(1).join(' ') || ''
 
-    const validation = validateCompetitorInput({ firstName, lastName, birthDate: ageGroup, category, rank })
+    const validation = validateCompetitorInput({ firstName, lastName, ageGroup, category, rank })
     if (!validation.valid) {
         console.error('Validation failed:', validation.error)
         return

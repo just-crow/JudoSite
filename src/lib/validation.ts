@@ -34,11 +34,11 @@ export function validateCompetitionInput(data: { title: string; date: string; lo
     return { valid: errors.length === 0, error: errors.join(', ') };
 }
 
-export function validateCompetitorInput(data: { firstName: string; lastName: string; birthDate: string; category: string; rank: string }) {
+export function validateCompetitorInput(data: { firstName: string; lastName: string; ageGroup: string; category: string; rank: string }) {
     const errors: string[] = [];
     if (!data.firstName || data.firstName.length < 2) errors.push('First name required');
     if (!data.lastName || data.lastName.length < 2) errors.push('Last name required');
-    if (!validateDate(data.birthDate)) errors.push('Invalid birth date');
+    if (!data.ageGroup || data.ageGroup.length < 2) errors.push('Age group required');
     if (!data.category) errors.push('Category required');
     if (!data.rank) errors.push('Rank required');
 
