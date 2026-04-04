@@ -5,6 +5,11 @@ import { syncCompetitionsFromJudoManager } from '@/lib/competition-sync'
 export const dynamic = 'force-dynamic'
 
 function isAuthorized(req: NextRequest): boolean {
+    // Vercel Crons send this header automatically
+    if (req.headers.get('x-vercel-cron') === 'true') {
+        return true
+    }
+
     const configured = process.env.JUDOMANAGER_SYNC_SECRET || process.env.CRON_SECRET
     if (!configured) return false
 

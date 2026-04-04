@@ -59,7 +59,7 @@ export default function AddCompetitorPage() {
                                 <option value="U-9">U-9</option>
                                 <option value="U-11">U-11</option>
                                 <option value="U-13">U-13</option>
-                                <option value="U-15">U-15</option>
+                                <option value="U-16">U-16</option>
                                 <option value="Kadeti">Kadeti</option>
                                 <option value="Juniori">Juniori</option>
                                 <option value="Seniori">Seniori</option>
