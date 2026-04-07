@@ -10,8 +10,13 @@ export default function DojoPage() {
         <div className="section">
             <div className="container">
                 <div className="text-center mb-16 animate-fade-in-up">
-                    <h1 className="text-4xl font-bold text-white mb-4">Naš Dojo</h1>
-                    <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
+                    <span className="tag mb-4 text-[var(--secondary)]">Infrastruktura</span>
+                    <h1 className="text-5xl lg:text-6xl font-extrabold mb-6">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-[var(--text-primary)] to-white">
+                            Naš Dojo
+                        </span>
+                    </h1>
+                    <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">
                         Mjesto gdje teče znoj, grade se karakteri i stvaraju pobjednici.
                     </p>
                 </div>
@@ -31,7 +36,6 @@ export default function DojoPage() {
                             <ul className="space-y-3">
                                 {[
                                     '200m² tatami površine',
-                                    'Zaštitne strunjače na zidovima',
                                     'Moderna ventilacija i grijanje',
                                     'Video nadzor za sigurnost'
                                 ].map((item, i) => (
@@ -48,17 +52,8 @@ export default function DojoPage() {
                 </div>
 
                 {/* Additional Facilities */}
-                <div className="grid md:grid-cols-3 gap-8 mb-16">
+                <div className="grid md:grid-cols-2 gap-8 mb-16">
                     <div className="card p-6 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-                        <div className="h-40 bg-[var(--background)] rounded-lg mb-4 flex items-center justify-center">
-                            <span className="text-[var(--text-muted)]">[Teretana]</span>
-                        </div>
-                        <h3 className="text-lg font-bold text-white mb-2">Mini Teretana</h3>
-                        <p className="text-[var(--text-secondary)] text-sm">
-                            Opremljena tegovima, girjama i spravama za funkcionalni trening snage i kondicije.
-                        </p>
-                    </div>
-                    <div className="card p-6 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                         <div className="h-40 bg-[var(--background)] rounded-lg mb-4 flex items-center justify-center">
                             <span className="text-[var(--text-muted)]">[Svlačionice]</span>
                         </div>
@@ -67,7 +62,7 @@ export default function DojoPage() {
                             Odvojene muške i ženske svlačionice sa tuševima i ormarićima za lične stvari.
                         </p>
                     </div>
-                    <div className="card p-6 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+                    <div className="card p-6 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                         <div className="h-40 bg-[var(--background)] rounded-lg mb-4 flex items-center justify-center">
                             <span className="text-[var(--text-muted)]">[Čekaonica]</span>
                         </div>

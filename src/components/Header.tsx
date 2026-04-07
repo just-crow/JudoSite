@@ -35,10 +35,6 @@ const menuItems = [
   {
     label: 'Historija',
     href: '/historija',
-    submenu: [
-      { label: 'Historija kluba', href: '/historija' },
-      { label: 'Uspjesi i medalje', href: '/historija/uspjesi' },
-    ],
   },
 ];
 

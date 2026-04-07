@@ -20,8 +20,8 @@ export default function KlubPage() {
                         <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
                             Judo Klub Željezničar
                         </h1>
-                        <p className="text-xl text-[var(--text-secondary)]">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Od 1952. godine razvijamo judo kulturu i sportsku izvrsnost u Bosni i Hercegovini.
+                        <p className="text-xl text-[#e0e8f0]">
+                            Osnovan 1952. godine u Sarajevu, Judo Klub Željezničar je jedno od najstarijih i najtrofejnijih judo kolektiva u Bosni i Hercegovini. Preko sedam decenija njegujemo duh majstora Kano Jigoro-a, odgajajući generacije sportista, trenera i ljude vrijedne poštovanja.
                         </p>
                     </div>
                 </div>
@@ -32,15 +32,15 @@ export default function KlubPage() {
                 <div className="container">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div>
-                            <h2 className="text-3xl font-bold text-white mb-6">Naša misija</h2>
+                            <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-6">Naša misija</h2>
                             <p className="text-[var(--text-secondary)] mb-4">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+                                Judo Klub Željezničar već generacijama gradi šampione, ne samo na strunjači već i u životu. Naš klub okuplja takmičare svih uzrasta, od najmlađih pionira do seniora, pružajući im stručno vođenje, disciplinu i timski duh.
                             </p>
                             <p className="text-[var(--text-secondary)] mb-4">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Kroz redovne treninge, seminare sa međunarodnim trenerima i učešće na domaćim i evropskim takmičenjima, naši sportisti stiču iskustvo koje ih razlikuje. Poseban ponos predstavljaju državni prvaci i reprezentativci koji su ponikli u našem klubu.
                             </p>
                             <p className="text-[var(--text-secondary)]">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                Klub je otvoren za sve koji žele da nauče judo, unaprijede svoju tehniku ili se pripreme za takmičarski nivo. Bez obzira na godine i predznanje, kod nas svako ima priliku da postane dio porodice Željezničar.
                             </p>
                         </div>
                         <div className="relative h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-[var(--surface)] to-[var(--surface-light)]">
@@ -60,12 +60,12 @@ export default function KlubPage() {
                     <div className="card p-8 lg:p-12">
                         <div className="grid lg:grid-cols-2 gap-8 items-center">
                             <div>
-                                <h2 className="text-3xl font-bold text-white mb-4">Naš Dojo</h2>
+                                <h2 className="text-3xl font-bold text-[var(--text-primary)] mb-4">Naš Dojo</h2>
                                 <p className="text-[var(--text-secondary)] mb-6">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Naš dojo je opremljen najmodernijom opremom i prostire se na 500 kvadratnih metara.
+                                    Naš dojo se nalazi u srcu Sarajeva i pruža profesionalne uslove za sve uzraste. Prostrani tatami prostor, kvalitetna ventilacija i stručno vođenje čine svaki trening sigurnim i efikasnim.
                                 </p>
                                 <ul className="space-y-3">
-                                    {["300m² tatami prostora", "Fitness sala", "Svlačionice sa tuševima", "Parking", "Pristup za invalidska kolica"].map((feature, i) => (
+                                    {["300m² tatami prostora", "Prostrana glavna sala", "Odvojene svlačionice", "Parking u blizini"].map((feature, i) => (
                                         <li key={i} className="flex items-center gap-3 text-[var(--text-secondary)]">
                                             <svg className="w-5 h-5 text-[var(--secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -93,7 +93,7 @@ export default function KlubPage() {
                 <div className="container">
                     <div className="grid md:grid-cols-3 gap-6">
                         <Link href="/historija" className="card p-6 group">
-                            <h3 className="text-lg font-bold text-white group-hover:text-[var(--secondary)] transition-colors mb-2">
+                            <h3 className="text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--secondary)] transition-colors mb-2">
                                 Historija kluba →
                             </h3>
                             <p className="text-[var(--text-secondary)] text-sm">
@@ -101,7 +101,7 @@ export default function KlubPage() {
                             </p>
                         </Link>
                         <Link href="/klub/sponzori" className="card p-6 group">
-                            <h3 className="text-lg font-bold text-white group-hover:text-[var(--secondary)] transition-colors mb-2">
+                            <h3 className="text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--secondary)] transition-colors mb-2">
                                 Sponzori →
                             </h3>
                             <p className="text-[var(--text-secondary)] text-sm">
@@ -109,7 +109,7 @@ export default function KlubPage() {
                             </p>
                         </Link>
                         <Link href="/kontakt" className="card p-6 group">
-                            <h3 className="text-lg font-bold text-white group-hover:text-[var(--secondary)] transition-colors mb-2">
+                            <h3 className="text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--secondary)] transition-colors mb-2">
                                 Kontakt →
                             </h3>
                             <p className="text-[var(--text-secondary)] text-sm">

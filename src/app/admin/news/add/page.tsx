@@ -32,6 +32,14 @@ function SubmitButton() {
 export default function AddNewsPage() {
     const [useUrl, setUseUrl] = useState(false)
     const [fileName, setFileName] = useState<string | null>(null)
+    const [error, setError] = useState<string | null>(null)
+
+    async function clientAction(formData: FormData) {
+        const result = await addNews(formData)
+        if (result?.error) {
+            setError(result.error)
+        }
+    }
 
     return (
         <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
@@ -49,7 +57,12 @@ export default function AddNewsPage() {
             </div>
 
             <div className="card p-8">
-                <form action={addNews} className="space-y-6">
+                <form action={clientAction} className="space-y-6">
+                    {error && (
+                        <div className="p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100">
+                            {error}
+                        </div>
+                    )}
                     <div className="grid md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Naslov</label>
@@ -65,10 +78,9 @@ export default function AddNewsPage() {
                             <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">Datum</label>
                             <input
                                 name="date"
-                                type="text"
+                                type="date"
                                 required
                                 className="w-full px-4 py-3 rounded-xl border border-[var(--border)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 outline-none transition-all"
-                                placeholder="npr. 12.03.2025"
                             />
                         </div>
                     </div>
