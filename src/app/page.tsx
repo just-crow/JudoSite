@@ -60,7 +60,7 @@ export default async function Home() {
               <AnimatedNumber target={100} suffix="+" />
               <div className="text-[var(--text-secondary)] font-medium">Članova</div>
             </div>
-            <div className="text-center group p-6 rounded-2xl hover:bg-white/5 transition-colors">
+            <div className="text-center group p-6 rounded-2xl hover:bg-white/5 transition-colors col-span-2 md:col-span-1">
               <AnimatedNumber target={10} suffix="+" />
               <div className="text-[var(--text-secondary)] font-medium">Državnih Prvaka</div>
             </div>

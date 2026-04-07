@@ -84,7 +84,7 @@ export default function Header() {
 
       {/* Main header */}
       <nav className="glass transition-all duration-300">
-        <div className="container">
+        <div className="container relative">
           <div className="flex items-center justify-between py-5">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-4 group">
@@ -159,14 +159,22 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-3 text-[var(--text-primary)] hover:bg-[var(--background-alt)] rounded-xl transition-all"
             >
-              <svg className="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ transform: mobileMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+              <svg className="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ transform: mobileMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }} strokeWidth={2}>
                 {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 )}
               </svg>
             </button>
+          </div>
+          {/* Centered mobile logo text */}
+          <div className="lg:hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <Link href="/">
+              <h2 className="text-3xl bg-clip-text text-transparent bg-gradient-to-r from-[#1a6dd4] via-[#0b5ed7] to-[#5a9cf8]" style={{ fontFamily: "var(--font-pacifico)" }}>
+                Željezničar
+              </h2>
+            </Link>
           </div>
         </div>
 
