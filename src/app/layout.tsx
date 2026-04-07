@@ -25,6 +25,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  icons: {
+    icon: '/ZeljeznicarIcon.png',
+    shortcut: '/ZeljeznicarIcon.png',
+    apple: '/ZeljeznicarIcon.png',
+  },
   robots: {
     index: true,
     follow: true,
