@@ -29,22 +29,56 @@ const fetchCompetitors = async (): Promise<Competitor[]> => {
         return []
     }
 
-    return data.map((item: any) => ({
+    const mapped = data.map((item: any) => ({
         id: item.id,
         name: `${item.first_name} ${item.last_name}`,
         category: item.category || '',
-        ageGroup: item.birth_year || '', // assuming DB field is birth_year, mapping to ageGroup per existing code
+        ageGroup: item.birth_year || '',
         rank: item.belt || '',
         description: '',
         image: item.image || '',
-        achievements: item.results ? item.results.split('\n') : []
+        achievements: item.results ? item.results.split('\n') : [],
+        _birthYearRaw: item.birth_year || ''
     }))
+
+    const ageGroupOrder: Record<string, number> = {
+        'Seniori': 0, 'Mlađi seniori': 1, 'Juniori': 2, 'Kadeti': 3,
+        'U-18': 4, 'U-16': 5, 'U-15': 6, 'U-14': 7, 'U-13': 8, 'U-12': 9,
+        'U-11': 10, 'U-10': 11, 'Picini': 12
+    }
+
+    function getAgeSortValue(raw: string): number {
+        if (ageGroupOrder[raw] !== undefined) return ageGroupOrder[raw]
+        if (raw.startsWith('U-')) {
+            const n = parseInt(raw.slice(2), 10)
+            return isNaN(n) ? -1 : (20 - n)
+        }
+        const year = parseInt(raw, 10)
+        if (!isNaN(year) && year > 1900 && year < 2030) return 2030 - year
+        return -1
+    }
+
+    function extractWeight(cat: string): number {
+        const match = cat.match(/(\d+)/)
+        return match ? parseInt(match[1], 10) : 0
+    }
+
+    mapped.sort((a, b) => {
+        const ageA = getAgeSortValue(a._birthYearRaw)
+        const ageB = getAgeSortValue(b._birthYearRaw)
+        if (ageA !== ageB) return ageA - ageB
+        return extractWeight(b.category) - extractWeight(a.category)
+    })
+
+    mapped.forEach(item => { delete (item as any)._birthYearRaw })
+
+    return mapped
 }
 
 export const getCompetitors = unstable_cache(
     async () => fetchCompetitors(),
-    ['competitors'],
-    { revalidate: 300, tags: ['competitors'] }
+    ['competitors-v2'],
+    { revalidate: 300, tags: ['competitors-v2'] }
 )
 
 export async function createCompetitor(formData: FormData): Promise<void> {

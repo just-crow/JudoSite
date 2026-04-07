@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero";
 import NewsCard from "@/components/NewsCard";
-import Footer from "@/components/Footer";
 import CompetitionsPreview from "@/components/CompetitionsPreview";
+import AnimatedStats, { AnimatedNumber } from "@/components/AnimatedStats";
 import { getNews } from "@/actions/news";
 import Link from "next/link";
 import { Metadata } from 'next';
@@ -39,39 +39,34 @@ export default async function Home() {
   // For the list below, we show everything that is NOT in the heroNews list
   // To avoid duplicates, we can filter by ID
   const heroIds = new Set(heroNews.map(n => n.id));
-  const listNews = allNews.filter(n => !heroIds.has(n.id));
+  const listNews = allNews.filter(n => !heroIds.has(n.id)).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
       <Hero featuredNews={heroNews} />
 
       {/* Stats Section with subtle pattern background */}
-      <section className="relative py-20 bg-[var(--surface)] overflow-hidden">
+      <AnimatedStats>
         {/* Decorative background elements */}
         <div className="absolute top-0 left-0 w-full h-full opacity-[40%] pointer-events-none bg-[#18488f]"
           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--text-muted) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
-
         <div className="container relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             <div className="text-center group p-6 rounded-2xl hover:bg-white/5 transition-colors">
-              <div className="text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] mb-2 group-hover:scale-110 transition-transform duration-300">30+</div>
+              <AnimatedNumber target={30} suffix="+" />
               <div className="text-[var(--text-secondary)] font-medium">Godina Tradicije</div>
             </div>
             <div className="text-center group p-6 rounded-2xl hover:bg-white/5 transition-colors">
-              <div className="text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] mb-2 group-hover:scale-110 transition-transform duration-300">500+</div>
+              <AnimatedNumber target={100} suffix="+" />
               <div className="text-[var(--text-secondary)] font-medium">Članova</div>
             </div>
             <div className="text-center group p-6 rounded-2xl hover:bg-white/5 transition-colors">
-              <div className="text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] mb-2 group-hover:scale-110 transition-transform duration-300">50+</div>
+              <AnimatedNumber target={10} suffix="+" />
               <div className="text-[var(--text-secondary)] font-medium">Državnih Prvaka</div>
-            </div>
-            <div className="text-center group p-6 rounded-2xl hover:bg-white/5 transition-colors">
-              <div className="text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] mb-2 group-hover:scale-110 transition-transform duration-300">10+</div>
-              <div className="text-[var(--text-secondary)] font-medium">Trenera</div>
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedStats>
 
       {/* Upcoming Competitions Preview */}
       <section className="py-12 bg-white border-y border-[var(--border)]">
