@@ -1,5 +1,11 @@
 import Link from 'next/link';
 import { getAlbums } from '@/actions/gallery';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: "Galerije | Judo Klub Željezničar",
+    description: "Pogledajte fotografije iz naših treninga, takmičenja i događaja.",
+};
 
 export default async function GalleryPage() {
     const albums = await getAlbums();

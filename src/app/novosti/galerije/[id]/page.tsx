@@ -2,6 +2,16 @@ import { getAlbum, getAlbums } from '@/actions/gallery';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+    const { id } = await params;
+    const album = await getAlbum(id);
+    return {
+        title: album?.title ? `${album.title} | Galerije` : 'Galerija',
+        description: album?.images ? `Foto album sa ${album.images.length} fotografija.` : 'Foto album iz Judo Kluba Željezničar.',
+    };
+}
 
 export async function generateStaticParams() {
     const albums = await getAlbums();

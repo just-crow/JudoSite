@@ -2,27 +2,23 @@ import Link from 'next/link';
 
 const footerLinks = {
     novosti: [
-        { label: 'Najave', href: '/novosti/najave' },
-        { label: 'Izvještaji', href: '/novosti/izvjestaji' },
+        { label: 'Najave', href: '/novosti' },
         { label: 'Foto galerije', href: '/novosti/galerije' },
-        { label: 'Intervjui', href: '/novosti/intervjui' },
     ],
     klub: [
         { label: 'O klubu', href: '/klub' },
         { label: 'Historija', href: '/historija' },
-
         { label: 'Dojo', href: '/klub/dojo' },
+        { label: 'Sponzori', href: '/klub/sponzori' },
     ],
     takmicari: [
-        { label: 'Seniori', href: '/takmicari/seniori' },
-        { label: 'Juniori', href: '/takmicari/juniori' },
-        { label: 'Treneri', href: '/takmicari/treneri' },
+        { label: 'Takmičari', href: '/takmicari' },
+        { label: 'Treneri', href: '/treneri' },
+        { label: 'Kalendar', href: '/kalendar' },
     ],
     podrska: [
         { label: 'Kontakt', href: '/kontakt' },
-        { label: 'Članstvo', href: '/clanstvo' },
-        { label: 'Shop', href: '/shop' },
-        { label: 'Press', href: '/klub/press' },
+        { label: 'Članstvo', href: '/kontakt' },
     ],
 };
 
@@ -59,34 +55,34 @@ export default async function Footer() {
                         </div>
                     </div>
 
-                    {/* Links Column 1 */}
+                    {/* Links Column 1 - Quick Links */}
                     <div>
                         <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
                             <span className="w-1 h-6 bg-[var(--accent)] rounded-full"></span>
-                            Klub
+                            Brzi Linkovi
                         </h3>
                         <ul className="space-y-3">
-                            {['O nama', 'Historijat', 'Uprava', 'Treneri', 'Kontakt'].map((item) => (
-                                <li key={item}>
-                                    <Link href="#" className="text-white/70 hover:text-white hover:translate-x-1 transition-all inline-block text-sm">
-                                        {item}
+                            {footerLinks.klub.map((link) => (
+                                <li key={link.label}>
+                                    <Link href={link.href} className="text-white/70 hover:text-white hover:translate-x-1 transition-all inline-block text-sm">
+                                        {link.label}
                                     </Link>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
-                    {/* Links Column 2 */}
+                    {/* Links Column 2 - Training */}
                     <div>
                         <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
                             <span className="w-1 h-6 bg-[var(--accent)] rounded-full"></span>
-                            Programi
+                            Treninzi
                         </h3>
                         <ul className="space-y-3">
-                            {['Judo škola', 'Takmičarski pogon', 'Rekreativni judo', 'Samodbrana', 'Termini treninga'].map((item) => (
-                                <li key={item}>
-                                    <Link href="#" className="text-white/70 hover:text-white hover:translate-x-1 transition-all inline-block text-sm">
-                                        {item}
+                            {footerLinks.takmicari.map((link) => (
+                                <li key={link.label}>
+                                    <Link href={link.href} className="text-white/70 hover:text-white hover:translate-x-1 transition-all inline-block text-sm">
+                                        {link.label}
                                     </Link>
                                 </li>
                             ))}
@@ -142,8 +138,8 @@ export default async function Footer() {
                 <div className="py-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/50">
                     <p>© 2026 Judo Klub Željezničar. Sva prava pridržana.</p>
                     <div className="flex gap-6">
-                        <Link href="#" className="hover:text-white transition-colors">Privatnost</Link>
-                        <Link href="#" className="hover:text-white transition-colors">Uslovi korištenja</Link>
+                        <Link href="/kontakt" className="hover:text-white transition-colors">Privatnost</Link>
+                        <Link href="/kontakt" className="hover:text-white transition-colors">Uslovi korištenja</Link>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(read:*)",
+      "Bash(find C:UsersMakDesktopCodeVibecodingZeljeznicarJudoSitesrc -iname *competitor* -o -iname *takmic* -o -iname *competi*)",
+      "Bash(find C:UsersMakDesktopCodeVibecodingZeljeznicarJudoSite -name .env* -type f)",
+      "Bash(node:*)",
+      "Bash(netstat -ano)",
+      "Bash(xargs kill:*)",
+      "Bash(cd:*)",
+      "Bash(lsof -ti:3000)",
+      "Bash(python3 -c \":*)",
+      "Bash(python3:*)",
+      "Bash(ls \"C:\\\\Users\\\\Mak\\\\Desktop\\\\Code\\\\Vibecoding\\\\Zeljeznicar\\\\JudoSite\\\\src\\\\app/robots\"*)",
+      "Bash(ls \"C:\\\\Users\\\\Mak\\\\Desktop\\\\Code\\\\Vibecoding\\\\Zeljeznicar\\\\JudoSite\\\\src\\\\app/sitemap\"*)",
+      "Bash(dir C:UsersMakAppDataLocalTempclaudeC--Users-Mak-Desktop-Code-Vibecoding-Zeljeznicar-JudoSite)",
+      "Bash(find C:UsersMakDesktopCodeVibecodingZeljeznicarJudoSitesrcapp -name page.tsx -not -path *admin*)",
+      "Bash(while read:*)",
+      "Bash(do echo:*)",
+      "Read(//c/Users/Mak/Desktop/Code/Vibecoding/Zeljeznicar/JudoSite/**)",
+      "Bash(done)"
+    ]
+  }
+}

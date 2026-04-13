@@ -17,14 +17,14 @@ const pacifico = Pacifico({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://judoklubzeljeznicar.ba'),
-  title: "Judo Klub Željezničar | Zvanična internet stranica",
+  title: {
+    default: "Judo Klub Željezničar | Zvanična internet stranica",
+    template: "%s | Judo Klub Željezničar",
+  },
   description: "Zvanična internet stranica Judo Kluba Željezničar. Od 1952. godine razvijamo judo kulturu i sportsku izvrsnost.",
   keywords: ["judo", "sarajevo", "klub", "željezničar", "borilačke vještine", "sport", "djeca", "takmičenja"],
   authors: [{ name: 'Judo Klub Željezničar' }],
   publisher: 'Judo Klub Željezničar',
-  alternates: {
-    canonical: '/',
-  },
   icons: {
     icon: '/ZeljeznicarIcon.png',
     shortcut: '/ZeljeznicarIcon.png',
@@ -40,6 +40,18 @@ export const metadata: Metadata = {
     type: "website",
     locale: "bs_BA",
     siteName: "Judo Klub Željezničar",
+    images: [{
+      url: '/ZeljeznicarIcon.png',
+      width: 512,
+      height: 512,
+      alt: 'Judo Klub Željezničar logo',
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Judo Klub Željezničar",
+    description: "Zvanična internet stranica Judo Kluba Željezničar",
+    images: ['/ZeljeznicarIcon.png'],
   },
 };
 

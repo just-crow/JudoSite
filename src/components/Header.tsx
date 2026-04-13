@@ -36,6 +36,10 @@ const menuItems = [
     label: 'Historija',
     href: '/historija',
   },
+  {
+    label: 'Takmičenja',
+    href: '/kalendar',
+  },
 ];
 
 import { usePathname } from 'next/navigation';
@@ -199,7 +203,7 @@ export default function Header() {
                 </div>
               </div>
               <div className="mt-12 pt-10 border-t border-[var(--border)]">
-                <Link href="/clanstvo" className="btn-primary w-full justify-center text-lg py-6" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/kontakt" className="btn-primary w-full justify-center text-lg py-6" onClick={() => setMobileMenuOpen(false)}>
                   Postani član
                 </Link>
               </div>

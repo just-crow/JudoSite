@@ -2,6 +2,8 @@
 import { getCompetitions } from "@/actions/competitions";
 import { Metadata } from 'next';
 import { partitionByDate, sortByDateAscending, formatCalendarDate, formatShortDate } from '@/utils/date-utils';
+import { MedalsList } from '@/components/MedalsList';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
     title: "Kalendar Takmičenja | Judo Klub Željezničar",
@@ -130,6 +132,14 @@ export default async function CalendarPage() {
                                             <div className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
                                                 <span>{comp.location}</span>
                                             </div>
+                                            {(comp.registrationLink || (comp as any).application_link) && (
+                                                <Suspense fallback={<div className="h-[50px] mt-4 animate-pulse bg-[var(--surface)] border border-[var(--border)] rounded-md w-full"></div>}>
+                                                    <MedalsList 
+                                                        registrationLink={comp.registrationLink || (comp as any).application_link} 
+                                                        date={comp.date} 
+                                                    />
+                                                </Suspense>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
