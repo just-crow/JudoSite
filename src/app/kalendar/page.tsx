@@ -1,7 +1,7 @@
 
 import { getCompetitions } from "@/actions/competitions";
 import { Metadata } from 'next';
-import { partitionByDate, sortByDateAscending, formatCalendarDate, formatShortDate } from '@/utils/date-utils';
+import { partitionByDate, sortByDateAscending, sortByDateDescending, formatCalendarDate, formatShortDate } from '@/utils/date-utils';
 import { MedalsList } from '@/components/MedalsList';
 import { Suspense } from 'react';
 
@@ -12,8 +12,9 @@ export const metadata: Metadata = {
 
 export default async function CalendarPage() {
     const competitions = await getCompetitions();
-    const { upcoming: upcomingRaw, past } = partitionByDate(competitions);
+    const { upcoming: upcomingRaw, past: pastRaw } = partitionByDate(competitions);
     const upcoming = sortByDateAscending(upcomingRaw);
+    const past = sortByDateDescending(pastRaw);
 
     return (
         <div className="min-h-screen bg-[var(--background)]">

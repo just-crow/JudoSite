@@ -35,3 +35,7 @@ export function partitionByDate<T extends { date: string }>(items: T[]) {
 export function sortByDateAscending<T extends { date: string }>(items: T[]): T[] {
     return [...items].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 }
+
+export function sortByDateDescending<T extends { date: string }>(items: T[]): T[] {
+    return [...items].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}

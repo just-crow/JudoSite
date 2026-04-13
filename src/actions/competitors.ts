@@ -77,8 +77,8 @@ const fetchCompetitors = async (): Promise<Competitor[]> => {
 
 export const getCompetitors = unstable_cache(
     async () => fetchCompetitors(),
-    ['competitors-v2'],
-    { revalidate: 300, tags: ['competitors-v2'] }
+    ['competitors-v3'],
+    { revalidate: 300, tags: ['competitors-v3'] }
 )
 
 export async function createCompetitor(formData: FormData): Promise<void> {
