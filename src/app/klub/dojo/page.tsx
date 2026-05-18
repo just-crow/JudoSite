@@ -25,12 +25,12 @@ export default function DojoPage() {
                 {/* Main Feature */}
                 <div className="card overflow-hidden mb-12 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                     <div className="grid md:grid-cols-2">
-                        <div className="h-64 md:h-auto bg-[var(--background-alt)] relative overflow-hidden">
-                            <Image
-                                src="/images/dojo.jpg"
-                                alt="Velika Sala"
+                        <div className="h-64 md:h-auto bg-[var(--background-alt)] flex items-center justify-center relative overflow-hidden">
+                            <Image 
+                                src="/images/dojo.jpg" 
+                                alt="Velika Sala Dojo" 
                                 fill
-                                style={{ objectFit: 'cover' }}
+                                className="object-cover"
                             />
                         </div>
                         <div className="p-8 md:p-12 flex flex-col justify-center">
@@ -65,7 +65,7 @@ export default function DojoPage() {
                         </div>
                         <h3 className="text-lg font-bold text-white mb-2">Svlačionice</h3>
                         <p className="text-[var(--text-secondary)] text-sm">
-                            Odvojene muške i ženske svlačionice sa tuševima i ormarićima za lične stvari.
+                            Odvojene muške i ženske svlačionice.
                         </p>
                     </div>
                     <div className="card p-6 animate-fade-in-up" style={{ animationDelay: '300ms' }}>

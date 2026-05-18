@@ -43,11 +43,17 @@ export default function KlubPage() {
                                 Klub je otvoren za sve koji žele da nauče judo, unaprijede svoju tehniku ili se pripreme za takmičarski nivo. Bez obzira na godine i predznanje, kod nas svako ima priliku da postane dio porodice Željezničar.
                             </p>
                         </div>
-                        <div className="relative h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-[var(--surface)] to-[var(--surface-light)]">
+                        <div className="relative h-80 rounded-2xl overflow-hidden bg-transparent">
                             <img
-                                src="/images/486677264_620710237636162_8126068584696942124_n.jpg"
-                                alt="Judo Klub Željezničar"
+                                src="/images/hodza.png"
+                                alt="Judo Klub Željezničar - Naša misija"
                                 className="w-full h-full object-cover"
+                                style={{
+                                    WebkitMaskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent), linear-gradient(to bottom, black 80%, transparent 100%)',
+                                    WebkitMaskComposite: 'source-in',
+                                    maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent), linear-gradient(to bottom, black 80%, transparent 100%)',
+                                    maskComposite: 'intersect'
+                                }}
                             />
                         </div>
                     </div>
@@ -76,12 +82,11 @@ export default function KlubPage() {
                                 </ul>
                             </div>
                             <div className="relative h-64 rounded-xl overflow-hidden bg-gradient-to-br from-[var(--surface-light)] to-[var(--surface)]">
-                                <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                                    <span className="text-8xl">🥋</span>
-                                </div>
-                                <div className="absolute bottom-4 left-4 right-4 text-center text-[var(--text-muted)] text-sm">
-                                    [Placeholder za sliku doja]
-                                </div>
+                                <img
+                                    src="/images/dojo.jpg"
+                                    alt="Naš Dojo"
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                         </div>
                     </div>
