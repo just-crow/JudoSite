@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
     title: "Naš Dojo | Judo Klub Željezničar",
@@ -24,18 +25,23 @@ export default function DojoPage() {
                 {/* Main Feature */}
                 <div className="card overflow-hidden mb-12 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                     <div className="grid md:grid-cols-2">
-                        <div className="h-64 md:h-auto bg-[var(--background-alt)] flex items-center justify-center">
-                            <span className="text-[var(--text-muted)] text-xl">[Slika Velike Sale]</span>
+                        <div className="h-64 md:h-auto bg-[var(--background-alt)] relative overflow-hidden">
+                            <Image
+                                src="/images/dojo.jpg"
+                                alt="Velika Sala"
+                                fill
+                                style={{ objectFit: 'cover' }}
+                            />
                         </div>
                         <div className="p-8 md:p-12 flex flex-col justify-center">
                             <h2 className="text-2xl font-bold text-white mb-4">Velika Sala</h2>
                             <p className="text-[var(--text-secondary)] mb-6">
-                                Naša glavna sala prostire se na preko 200 kvadratnih metara i opremljena je vrhunskim tatami podlogama sigurnim za sve uzraste.
+                                Naša glavna sala prostire se na preko 300 kvadratnih metara i opremljena je vrhunskim tatami podlogama sigurnim za sve uzraste.
                                 Klimatizovan prostor sa modernim sistemom ventilacije osigurava svjež vazduh tokom cijelog treninga.
                             </p>
                             <ul className="space-y-3">
                                 {[
-                                    '200m² tatami površine',
+                                    '300m² tatami površine',
                                     'Moderna ventilacija i grijanje',
                                     'Video nadzor za sigurnost'
                                 ].map((item, i) => (
